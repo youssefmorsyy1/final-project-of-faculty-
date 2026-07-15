@@ -1,0 +1,147 @@
+<!-- pages/eda.html — exploratory data analysis over the source tables -->
+<div class="section-header">Dataset Overview</div>
+<p class="text-muted fs-12" id="edaNote" style="margin-bottom:14px">
+  Exploratory analysis of the underlying StatsBomb event data, Transfermarkt
+  injury records, and Open-Meteo match-day weather that feed every model. The
+  headline counts below are computed live from PostgreSQL via
+  <code>/api/eda</code>; the figures are the analysis notebook's own plots
+  (<code>analysis/eda.ipynb</code>).
+</p>
+
+<div class="kpi-grid">
+  <div class="kpi-card" data-tip="Matches ingested across all competitions">
+    <div class="kpi-label">Matches</div>
+    <div class="kpi-value shimmer" id="edaMatches" style="height:36px;width:80px">&nbsp;</div>
+    <div class="kpi-sub">Big-5 + tournaments</div>
+  </div>
+  <div class="kpi-card" data-tip="Distinct players in the database">
+    <div class="kpi-label">Players</div>
+    <div class="kpi-value shimmer" id="edaPlayers" style="height:36px;width:80px">&nbsp;</div>
+    <div class="kpi-sub">across all squads</div>
+  </div>
+  <div class="kpi-card" data-tip="Shot events powering the xG model">
+    <div class="kpi-label">Shots</div>
+    <div class="kpi-value shimmer" id="edaShots" style="height:36px;width:80px">&nbsp;</div>
+    <div class="kpi-sub">with freeze-frame features</div>
+  </div>
+  <div class="kpi-card" data-tip="Aggregated pass-network edges">
+    <div class="kpi-label">Pass Edges</div>
+    <div class="kpi-value shimmer" id="edaEdges" style="height:36px;width:80px">&nbsp;</div>
+    <div class="kpi-sub">passer / receiver pairs</div>
+  </div>
+</div>
+
+<div class="section-header mt-24">Match &amp; Squad Composition</div>
+
+<div class="card mt-8">
+  <div class="card-title">Match-Level Distributions</div>
+  <img class="eda-fig" src="/artifacts/eda/match_distributions.png?v=2.12.3"
+       alt="Goals per match, home vs away scoring, result share by competition, matches per season, and rolling average goals over time">
+  <p class="text-muted fs-11 mt-8">
+    Goals-per-match follows an approximately Poisson shape, home sides outscore
+    away sides on average, and total scoring is broadly stable across seasons —
+    the basis for the expected-points model on the dashboard.
+  </p>
+</div>
+
+<div class="card mt-16">
+  <div class="card-title">Player Demographics</div>
+  <img class="eda-fig" src="/artifacts/eda/player_demographics.png?v=2.12.3"
+       alt="Player age distribution, top 15 nationalities, and position distribution from Transfermarkt">
+  <p class="text-muted fs-11 mt-8">
+    Squad ages cluster around the late-20s, Spanish players dominate the
+    Transfermarkt-linked pool, and the positional mix is led by centre-backs and
+    central midfielders.
+  </p>
+</div>
+
+<div class="card mt-16">
+  <div class="card-title">Competition Coverage</div>
+  <img class="eda-fig" src="/artifacts/eda/competition_coverage.png?v=2.12.3"
+       alt="Top 20 teams by matches played and number of teams referenced per competition">
+  <p class="text-muted fs-11 mt-8">
+    Domestic-league clubs carry the bulk of the per-team match volume, while the
+    international tournaments contribute the broadest spread of distinct teams.
+  </p>
+</div>
+
+<div class="section-header mt-24">Per-Player Performance Signals</div>
+
+<div class="card mt-8">
+  <div class="card-title">Key Metric Distributions</div>
+  <img class="eda-fig" src="/artifacts/eda/metric_distributions.png?v=2.12.3"
+       alt="Histograms of xG, xA, pass accuracy, pressures, carry distance, shots, tackles and minutes played">
+  <p class="text-muted fs-11 mt-8">
+    Attacking outputs (xG, xA, shots) are heavily right-skewed — most
+    player-match rows contribute little, with rare high-volume games — whereas
+    pass accuracy and minutes played are concentrated near their upper range.
+  </p>
+</div>
+
+<div class="card mt-16">
+  <div class="card-title">Spearman Correlation Matrix</div>
+  <img class="eda-fig" src="/artifacts/eda/correlation_matrix.png?v=2.12.3"
+       alt="Spearman correlation matrix across all player_match_stats metrics">
+  <p class="text-muted fs-11 mt-8">
+    Shots and xG are the strongest correlates of goals; passing and carrying
+    volume form a tight cluster, and defensive actions correlate among
+    themselves — the structure the clustering and cohesion models exploit.
+  </p>
+</div>
+
+<div class="card mt-16">
+  <div class="card-title">Metric Trends Across Seasons</div>
+  <img class="eda-fig" src="/artifacts/eda/season_trends.png?v=2.12.3"
+       alt="Season trends for xG per 90, pass accuracy, pressures and carry distance">
+  <p class="text-muted fs-11 mt-8">
+    Pass accuracy trends upward over time while pressing volume declines in the
+    most recent seasons — a stylistic shift worth controlling for when comparing
+    players across eras.
+  </p>
+</div>
+
+<div class="section-header mt-24">Injury Landscape</div>
+
+<div class="card mt-8">
+  <div class="card-title">Injury Overview</div>
+  <img class="eda-fig" src="/artifacts/eda/injury_overview.png?v=2.12.3"
+       alt="Days out per injury, top injury types, injuries by year, injuries by position, days out by type, and games missed">
+  <p class="text-muted fs-11 mt-8">
+    Most absences are short, muscle injuries dominate the type breakdown, and
+    recorded injuries grow with data coverage in recent years — the label base
+    for the injury-risk model.
+  </p>
+</div>
+
+<div class="card mt-16">
+  <div class="card-title">Injury Rate by Starting Position</div>
+  <img class="eda-fig" src="/artifacts/eda/injury_by_position.png?v=2.12.3"
+       alt="30-day injury rate by starting position">
+  <p class="text-muted fs-11 mt-8">
+    Full-backs and wide defenders show the highest 30-day injury rates, giving
+    the risk model a meaningful positional signal beyond raw workload.
+  </p>
+</div>
+
+<div class="section-header mt-24">Match-Day Weather</div>
+
+<div class="card mt-8">
+  <div class="card-title">Weather Conditions Across Venues</div>
+  <img class="eda-fig" src="/artifacts/eda/weather_overview.png?v=2.12.3"
+       alt="Distributions of match-day temperature, precipitation, wind speed and humidity, the frequency of each weather condition, and a temperature-vs-precipitation scatter coloured by humidity">
+  <p class="text-muted fs-11 mt-8">
+    Historical match-day weather from the Open-Meteo archive, joined to each
+    fixture by stadium coordinates. Most matches are played in clear, mild
+    conditions; the long tails (cold, heavy rain, high wind) are the cases an
+    environmental model would have to lean on.
+  </p>
+</div>
+
+<div class="section-header mt-24">Shot Conversion by Body Part</div>
+
+<div class="card mt-8">
+  <table class="data-table" id="edaConversionTable">
+    <thead><tr><th>Body Part</th><th>Shots</th><th>Goals</th><th>Conversion</th></tr></thead>
+    <tbody><tr><td colspan="4" class="text-muted text-center">Loading…</td></tr></tbody>
+  </table>
+</div>

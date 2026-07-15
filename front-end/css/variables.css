@@ -1,0 +1,96 @@
+/* =============================================================================
+   variables.css
+   Design tokens for the Soccer Analytics platform.
+   Single source of truth — change a value here, it propagates everywhere.
+
+   Theme: "Precision Analytics"
+   Dark industrial palette. Monospace data typography. Sharp, technical feel.
+   ============================================================================= */
+
+:root {
+
+  /* ---------------------------------------------------------------------------
+     Backgrounds — layered depth from darkest (page) to lightest (elevated)
+  --------------------------------------------------------------------------- */
+  --bg-page:       #080c14;   /* page canvas */
+  --bg-primary:    #080c14;   /* alias kept for backward compat */
+  --bg-secondary:  #0d1220;   /* sidebar, topbar */
+  --bg-card:       #111827;   /* standard card surface */
+  --bg-card-hover: #172035;   /* card on hover */
+  --bg-input:      #0d1220;   /* form inputs, selects */
+
+  /* ---------------------------------------------------------------------------
+     Borders
+  --------------------------------------------------------------------------- */
+  --border:        rgba(56, 189, 131, 0.10);
+  --border-bright: rgba(56, 189, 131, 0.28);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+
+  /* ---------------------------------------------------------------------------
+     Brand accent — green
+  --------------------------------------------------------------------------- */
+  --accent:        #38bd83;
+  --accent-bright: #4ecca0;
+  --accent-dim:    rgba(56, 189, 131, 0.12);
+  --accent-glow:   rgba(56, 189, 131, 0.25);
+
+  /* ---------------------------------------------------------------------------
+     Secondary palette
+  --------------------------------------------------------------------------- */
+  --cyan:      #06b6d4;
+  --cyan-dim:  rgba(6, 182, 212, 0.12);
+  --amber:     #f59e0b;
+  --amber-dim: rgba(245, 158, 11, 0.12);
+  --red:       #ef4444;
+  --red-dim:   rgba(239, 68, 68, 0.12);
+  --purple:    #8b5cf6;
+  --purple-dim:rgba(139, 92, 246, 0.12);
+
+  /* ---------------------------------------------------------------------------
+     Text hierarchy
+  --------------------------------------------------------------------------- */
+  --text-primary:   #e8edf5;
+  --text-secondary: #8896aa;
+  --text-muted:     #4a5568;
+  --text-accent:    var(--accent);
+
+  /* ---------------------------------------------------------------------------
+     Typography
+     Syne          — geometric display font for headings and page titles
+     IBM Plex Mono — monospaced for KPI values, numbers, data labels
+     DM Sans       — clean sans-serif for body text and UI labels
+  --------------------------------------------------------------------------- */
+  --font-display: 'Syne', sans-serif;
+  --font-mono:    'IBM Plex Mono', monospace;
+  --font-body:    'DM Sans', sans-serif;
+
+  /* ---------------------------------------------------------------------------
+     Spacing & sizing
+  --------------------------------------------------------------------------- */
+  --sidebar-w:   228px;
+  --topbar-h:    54px;
+  --radius:      8px;
+  --radius-sm:   4px;
+  --radius-lg:   12px;
+
+  /* ---------------------------------------------------------------------------
+     Shadows & effects
+  --------------------------------------------------------------------------- */
+  --shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow:      0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg:   0 8px 32px rgba(0, 0, 0, 0.6);
+  --glow-accent: 0 0 12px rgba(56, 189, 131, 0.3);
+
+  /* ---------------------------------------------------------------------------
+     Subtle background grid texture — gives the page a technical feel
+     Applied via ::before pseudo-element on .app
+  --------------------------------------------------------------------------- */
+  --grid-color: rgba(56, 189, 131, 0.03);
+
+  /* ---------------------------------------------------------------------------
+     Transition presets
+  --------------------------------------------------------------------------- */
+  --transition-fast:   0.15s ease;
+  --transition:        0.25s ease;
+  --transition-slow:   0.4s ease;
+}

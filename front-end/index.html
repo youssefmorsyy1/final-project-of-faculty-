@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soccer Analytics Platform</title>
+
+  <!-- Fonts:
+       Syne        — geometric display font for headings and page titles
+       IBM Plex Mono — monospaced for KPI values, numbers, labels
+       DM Sans     — clean sans-serif for body text
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;700&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- CSS load order matters: tokens → reset → layout → components → pages -->
+  <link rel="stylesheet" href="/static/css/variables.css?v=2.14.0" />
+  <link rel="stylesheet" href="/static/css/reset.css?v=2.14.0" />
+  <link rel="stylesheet" href="/static/css/layout.css?v=2.14.0" />
+  <link rel="stylesheet" href="/static/css/components.css?v=2.14.0" />
+  <link rel="stylesheet" href="/static/css/pages.css?v=2.14.0" />
+
+  <!-- Must load synchronously BEFORE the body scripts: charts.js references
+       Chart.defaults at the top level. With `defer` it would run after the
+       non-deferred body scripts and throw "Chart is not defined". -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- =========================================================
+       SIDEBAR
+  ========================================================= -->
+  <aside class="sidebar">
+
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round">
+          <circle cx="8" cy="8" r="6.3"/>
+          <polygon points="8,5 10.4,6.8 9.5,9.6 6.5,9.6 5.6,6.8"/>
+          <path d="M8 5V2.4M10.4 6.8l2.4-0.9M9.5 9.6l1.7 1.9M6.5 9.6l-1.7 1.9M5.6 6.8l-2.4-0.9"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">Soccer Analytics</div>
+        <div class="logo-sub">Intelligent Insights</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+
+      <div class="nav-section-label">Analytics</div>
+
+      <div class="nav-item active" data-page="dashboard">
+        <span class="nav-icon">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 13.5h12"/><path d="M4 13V8.5M8 13V3.5M12 13V6.5"/>
+          </svg>
+        </span>
+        <span>Dashboard</span>
+      </div>
+      <div class="nav-item" data-page="player">
+        <span class="nav-icon">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="5.2" r="2.6"/><path d="M3.5 13c0-2.5 2-4.2 4.5-4.2s4.5 1.7 4.5 4.2"/>
+          </svg>
+        </span>
+        <span>Player Efficiency</span>
+      </div>
+      <div class="nav-item" data-page="xg">
+        <span class="nav-icon">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="3"/><circle cx="8" cy="8" r="0.7" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span>Shot Quality (xG)</span>
+      </div>
+      <div class="nav-item" data-page="cohesion">
+        <span class="nav-icon">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="4" cy="4.2" r="1.7"/><circle cx="12" cy="5.2" r="1.7"/><circle cx="7" cy="12" r="1.7"/>
+            <path d="M5.4 4.9l5.1 0.6M5.3 5.4 6.4 10.5M10.6 6.4 8 10.6"/>
+          </svg>
+        </span>
+        <span>Pass Networks</span>
+      </div>
+      <div class="nav-item" data-page="injury">
+        <span class="nav-icon">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2.5" y="2.5" width="11" height="11" rx="2.5"/><path d="M8 5.5v5M5.5 8h5"/>
+          </svg>
+        </span>
+        <span>Injury Risk</span>
+      </div>
+      <div class="nav-item" data-page="winprob">
+        <span class="nav-icon">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 11l3.5-3.5 2.5 2.5L13 5"/><path d="M9.8 5h3.2v3.2"/>
+          </svg>
+        </span>
+        <span>Win Probability</span>
+      </div>
+
+      <div class="nav-section-label" style="margin-top:16px">Data &amp; Models</div>
+
+      <div class="nav-item" data-page="eda">
+        <span class="nav-icon">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6.4 2v3.6L3.4 11.6A1.2 1.2 0 0 0 4.5 13.4h7A1.2 1.2 0 0 0 12.6 11.6L9.6 5.6V2"/>
+            <path d="M5.4 2h5.2M5.2 9.2h5.6"/>
+          </svg>
+        </span>
+        <span>Exploratory Data</span>
+      </div>
+      <div class="nav-item" data-page="models">
+        <span class="nav-icon">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4.5" y="4.5" width="7" height="7" rx="1"/><rect x="6.6" y="6.6" width="2.8" height="2.8" rx="0.5"/>
+            <path d="M6.5 2v2M9.5 2v2M6.5 12v2M9.5 12v2M2 6.5h2M2 9.5h2M12 6.5h2M12 9.5h2"/>
+          </svg>
+        </span>
+        <span>Models &amp; Methodology</span>
+      </div>
+
+      <div class="nav-item nav-debug" data-page="debug">
+        <span class="nav-icon">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2.5 5h11M2.5 11h11"/><circle cx="6" cy="5" r="1.7"/><circle cx="10" cy="11" r="1.7"/>
+          </svg>
+        </span>
+        <span>Debug</span>
+      </div>
+
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="data-sources-label">Data Sources</div>
+      <div class="data-source"><div class="ds-dot"></div><span>StatsBomb (event data)</span></div>
+      <div class="data-source"><div class="ds-dot"></div><span>Transfermarkt (injuries)</span></div>
+      <div class="data-sources-label" style="margin-top:12px">Scope</div>
+      <div class="data-source" style="line-height:1.4">
+        <span style="font-size:10px;color:var(--text-secondary)">
+          Big-5 leagues 2015/16 + World Cups 2018/22 + Euros 2020/24.
+          Descriptive analytics + validated xG.
+        </span>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- =========================================================
+       MAIN: topbar + content
+  ========================================================= -->
+  <div class="main-wrapper">
+
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="page-title" id="pageTitle">Analytics Dashboard</span>
+      </div>
+      <div class="topbar-right">
+        <span class="source-badge" id="dataSourceBadge">Data: Loading</span>
+        <select class="top-select" id="teamSelector">
+          <option>Manchester City</option>
+          <option>Arsenal</option>
+          <option>Liverpool</option>
+          <option>Chelsea</option>
+        </select>
+        <select class="top-select" id="seasonSelector" title="Filter all data by season">
+          <option>Loading…</option>
+        </select>
+        <div class="user-badge">
+          <div class="user-dot"></div>
+          <div>
+            <div class="user-name">Analytics Team</div>
+            <div class="user-role">Administrator</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <main class="content-area">
+
+      <div class="page active" id="page-dashboard">
+        <div id="dashboard-content"></div>
+      </div>
+
+      <div class="page" id="page-player">
+        <div id="player-content"></div>
+      </div>
+
+      <div class="page" id="page-xg">
+        <div id="xg-content"></div>
+      </div>
+
+      <div class="page" id="page-cohesion">
+        <div id="cohesion-content"></div>
+      </div>
+
+      <div class="page" id="page-injury">
+        <div id="injury-content"></div>
+      </div>
+
+      <div class="page" id="page-winprob">
+        <div id="winprob-content"></div>
+      </div>
+
+      <div class="page" id="page-eda">
+        <div id="eda-content"></div>
+      </div>
+
+      <div class="page" id="page-models">
+        <div id="models-content"></div>
+      </div>
+
+      <div class="page" id="page-debug">
+        <div id="debug-content"></div>
+      </div>
+
+    </main>
+
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<!--
+  Script load order:
+  1. charts.js      — Chart.js wrappers, defines Charts object
+  2. passNetwork.js — SVG force graph, defines PassNetwork object
+  3. navigation.js  — page switching, defines Navigation object
+  4. api.js         — fetch wrappers, defines ApiService object
+  5. main.js        — bootstraps everything, uses all objects above
+  6. pageLoader.js  — async HTML injection; sets window.pagesLoadedPromise
+                      main.js awaits this before rendering anything
+-->
+<script src="/static/js/charts.js?v=2.14.0"></script>
+<script src="/static/js/passNetwork.js?v=2.14.0"></script>
+<script src="/static/js/navigation.js?v=2.14.0"></script>
+<script src="/static/js/api.js?v=2.14.0"></script>
+<script src="/static/js/main.js?v=2.14.0"></script>
+<script src="/static/js/pageLoader.js?v=2.14.0"></script>
+
+</body>
+</html>

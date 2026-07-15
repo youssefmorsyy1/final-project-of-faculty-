@@ -1,0 +1,100 @@
+<!-- pages/winprob.html -->
+<div class="model-info" data-model="model5_win_probability"></div>
+
+<!-- ───────────────────────── STATIC / PRE-MATCH ───────────────────────── -->
+<div class="section-header">Static · pre-match forecast</div>
+<div class="prob-banner">
+  <div class="prob-match">Loading…</div>
+  <div class="prob-values">
+    <div>
+      <div class="prob-pct team1 shimmer" style="height:52px;width:100px">&nbsp;</div>
+      <div class="prob-team">Win</div>
+    </div>
+    <div>
+      <div class="prob-pct draw shimmer" style="height:52px;width:100px">&nbsp;</div>
+      <div class="prob-team">Draw</div>
+    </div>
+    <div>
+      <div class="prob-pct team2 shimmer" style="height:52px;width:100px">&nbsp;</div>
+      <div class="prob-team">Loss</div>
+    </div>
+  </div>
+</div>
+<p class="text-muted fs-11" style="margin:-4px 0 16px">
+  The dataset is historical, so this is not a live next-match forecast: it is the
+  optimized pre-match classifier's average win / draw / loss probability for the
+  selected team over the chosen season, shown next to the team's actual record.
+  Unlike the original model, it now weighs the <strong>opponent's recent form</strong>,
+  each side's <strong>season points-per-game</strong>, and a margin-adjusted
+  <strong>Elo rating edge</strong> — the strongest single signal it uses.
+</p>
+
+<!-- ───────────────────────── DYNAMIC / IN-GAME ────────────────────────── -->
+<div class="section-header mt-24">Dynamic · in-game win probability</div>
+<div class="card mb-16">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <div class="card-title" style="margin:0">How the live model reads one match</div>
+    <select class="top-select" id="matchSelector" style="max-width:340px">
+      <option>Loading matches…</option>
+    </select>
+  </div>
+  <div class="chart-wrap mt-8" style="height:260px"><canvas id="winProbTimelineChart"></canvas></div>
+  <p class="text-muted fs-11 mt-8" id="winProbTlSummary">
+    The in-game classifier re-estimates the selected team's win / draw / loss
+    probability at every minute as the live score and chances evolve. The dashed
+    line marks the static pre-match call for comparison. Select a match above.
+  </p>
+</div>
+
+<div class="card mb-16">
+  <div class="card-title">Match xG timeline — who created the better chances</div>
+  <div class="chart-wrap mt-8" style="height:220px"><canvas id="matchTimelineChart"></canvas></div>
+  <p class="text-muted fs-11 mt-8" id="matchXgSummary">
+    Cumulative expected goals for each side over the 90 minutes. Diamonds mark
+    actual goals — the context behind the win-probability swings above.
+  </p>
+</div>
+
+<!-- ───────────────────────── INPUTS + ACCURACY ────────────────────────── -->
+<div class="two-col">
+  <div class="card">
+    <div class="card-title">What the pre-match model looks at</div>
+    <p class="text-muted fs-11" style="margin-bottom:12px">
+      A selection of the features fed to the static classifier, averaged over the
+      selected team and season — including the opponent-relative form and Elo
+      edge that the optimized model added.
+    </p>
+    <div id="wpInputs">
+      <div class="text-muted fs-12" style="padding:16px 0;text-align:center">Loading…</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">How good are the two models?</div>
+    <p class="text-muted fs-11" style="margin-bottom:14px">
+      Each picks one of three outcomes (win / draw / loss), so the bar to beat is
+      the majority-class baseline — not 100%. Accuracy is the held-out-season
+      score from the model's own training diagnostics.
+    </p>
+
+    <div class="inline-stat">
+      <div class="inline-stat-label">Static · pre-match<br>
+        <span class="text-muted fs-11">form + opponent + Elo</span></div>
+      <div style="text-align:right">
+        <div class="inline-stat-val text-accent" id="wpAccVal">—</div>
+        <div class="text-muted fs-11" id="wpAccBaseline">&nbsp;</div>
+      </div>
+    </div>
+    <div class="progress-bar mb-16"><div class="progress-fill green" id="wpAccBar" style="width:0%"></div></div>
+
+    <div class="inline-stat">
+      <div class="inline-stat-label">Dynamic · in-game<br>
+        <span class="text-muted fs-11">also sees the live score</span></div>
+      <div style="text-align:right">
+        <div class="inline-stat-val text-cyan" id="wpAccCv">—</div>
+        <div class="text-muted fs-11" id="wpAccCvBaseline">&nbsp;</div>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill green" id="wpAccCvBar" style="width:0%"></div></div>
+  </div>
+</div>

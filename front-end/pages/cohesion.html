@@ -1,0 +1,47 @@
+<!-- pages/cohesion.html -->
+<div class="model-info" data-model="model2_team_cohesion"></div>
+<div class="kpi-grid">
+  <div class="kpi-card" data-tip="Share of all possible passer→receiver links that actually occur (2E / V(V-1)), averaged over the team's matches">
+    <div class="kpi-label">Network Density</div>
+    <div class="kpi-value text-accent shimmer" style="height:36px;width:60px">&nbsp;</div>
+    <div class="kpi-sub">Connectivity</div>
+  </div>
+  <div class="kpi-card" data-tip="Average number of passing links per player (2E / V), averaged over matches">
+    <div class="kpi-label">Average Degree</div>
+    <div class="kpi-value text-cyan shimmer" style="height:36px;width:60px">&nbsp;</div>
+    <div class="kpi-sub">Links per player</div>
+  </div>
+  <div class="kpi-card" data-tip="How tightly players' passing partners are themselves connected (triangles)">
+    <div class="kpi-label">Clustering Coeff.</div>
+    <div class="kpi-value text-amber shimmer" style="height:36px;width:60px">&nbsp;</div>
+    <div class="kpi-sub">Subgroup strength</div>
+  </div>
+  <div class="kpi-card" data-tip="Mean betweenness centrality across players — how often the typical player sits on shortest passing paths">
+    <div class="kpi-label">Mean Betweenness</div>
+    <div class="kpi-value shimmer" style="height:36px;width:60px">&nbsp;</div>
+    <div class="kpi-sub">Playmaking spread</div>
+  </div>
+</div>
+
+<div class="card mb-16">
+  <div class="card-title">Pass Network — average positions</div>
+  <div class="pass-network-container">
+    <svg id="passNetworkSvg"></svg>
+  </div>
+  <p class="text-muted fs-11 mt-8">
+    Players sit at their average pass-origin position on the pitch (attacking
+    left&nbsp;→&nbsp;right), averaged across the team's matches. Node size is total
+    passing volume; line thickness is how often that pair connected.
+  </p>
+</div>
+
+<div class="two-col">
+  <div class="card" data-card="central">
+    <div class="card-title">Most Involved Players</div>
+    <!-- Populated by renderCohesion() -->
+  </div>
+  <div class="card" data-card="connected">
+    <div class="card-title">Best Connected Players</div>
+    <!-- Populated by renderCohesion() -->
+  </div>
+</div>

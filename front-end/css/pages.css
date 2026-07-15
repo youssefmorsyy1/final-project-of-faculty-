@@ -1,0 +1,596 @@
+/* =============================================================================
+   pages.css
+   Page-specific styles — anything only used on one page lives here.
+   Generic reusable styles belong in components.css.
+   ============================================================================= */
+
+/* =============================================================================
+   DASHBOARD PAGE
+   ============================================================================= */
+
+/* Squad status grid — player cards in a responsive grid */
+.squad-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.squad-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid transparent;
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  transition:
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.squad-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-bright);
+}
+
+.squad-card.risk-high { border-left-color: var(--red);    }
+.squad-card.risk-med  { border-left-color: var(--amber);  }
+.squad-card.risk-ok   { border-left-color: var(--accent); }
+
+.squad-name { font-weight: 600; font-size: 12px; margin-bottom: 2px; }
+.squad-pos  { font-size: 10px; color: var(--text-muted); margin-bottom: 8px; font-family: var(--font-mono); }
+
+/* Upcoming fixture list */
+.fixture-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.fixture-item:last-child { border-bottom: none; }
+
+.fixture-venue {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-family: var(--font-mono);
+}
+
+.venue-h { background: var(--accent-dim); color: var(--accent); }
+.venue-a { background: var(--red-dim);    color: var(--red);    }
+
+.fixture-opp  { flex: 1; font-weight: 600; font-size: 13px; }
+.fixture-date { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-family: var(--font-mono); }
+.fixture-prob { font-family: var(--font-mono); font-size: 14px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+.fixture-bar  { margin-top: 7px; }
+
+/* =============================================================================
+   PLAYER EFFICIENCY PAGE
+   ============================================================================= */
+
+.player-profile {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+/* Initials avatar */
+.player-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius);
+  background: var(--accent-dim);
+  border: 1px solid var(--border-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+  letter-spacing: -1px;
+}
+
+.player-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 3px;
+  letter-spacing: 0.2px;
+}
+
+.player-meta { font-size: 12px; color: var(--text-secondary); }
+
+.player-stats-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.stat-item span { color: var(--accent); font-weight: 700; }
+
+/* Metric cards — 6-up grid for top player stats */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.metric-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+  transition: border-color var(--transition-fast);
+}
+
+.metric-card:hover { border-color: var(--border-bright); }
+
+.metric-val {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.metric-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 3px;
+  font-family: var(--font-mono);
+}
+
+.metric-delta { font-size: 11px; margin-top: 5px; }
+.metric-delta.pos { color: var(--accent); }
+.metric-delta.neg { color: var(--red);    }
+
+/* Player archetype cluster cards */
+.cluster-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.cluster-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 13px 14px;
+  transition: border-color var(--transition-fast);
+}
+
+.cluster-card:hover    { border-color: var(--border-bright); }
+.cluster-card.selected { border-color: var(--accent); background: var(--accent-dim); }
+
+.cluster-name {
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cluster-count {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-radius: 20px;
+  padding: 1px 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cluster-players { font-size: 11px; color: var(--text-secondary); }
+.cluster-players li { padding: 2px 0; }
+.cluster-players li::before { content: '— '; color: var(--accent); }
+
+/* =============================================================================
+   TEAM COHESION PAGE
+   ============================================================================= */
+
+/* Shot map: a centered box whose aspect ratio matches the chart's axis ranges
+   (width 84 : length 64 ≈ 21:16) so the pitch is drawn in true proportion and
+   never stretched. */
+.shot-map-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 21 / 16;
+  margin: 0 auto;
+}
+
+.shot-map-wrap canvas {
+  position: absolute;
+  inset: 0;
+}
+
+/* Pass network: a centered box at the true pitch aspect ratio (120:80 = 3:2)
+   so the on-pitch node layout keeps real proportions. */
+.pass-network-container {
+  width: 100%;
+  max-width: 720px;
+  aspect-ratio: 3 / 2;
+  margin: 0 auto;
+  position: relative;
+  background: radial-gradient(ellipse at center, rgba(56, 189, 131, 0.04) 0%, transparent 70%);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+#passNetworkSvg {
+  width: 100%;
+  height: 100%;
+}
+
+.pn-tooltip {
+  position: absolute;
+  display: none;
+  pointer-events: none;
+  z-index: 5;
+  background: #111827;
+  border: 1px solid rgba(56, 189, 131, 0.35);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-family: var(--font-mono);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.pn-tip-name {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.pn-tip-row { font-size: 11px; color: var(--text-secondary); }
+
+/* =============================================================================
+   ENVIRONMENTAL IMPACT PAGE
+   ============================================================================= */
+
+.condition-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.condition-item:last-child { border-bottom: none; }
+
+.condition-name { font-weight: 600; font-size: 13px; }
+.condition-matches { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+.condition-score {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.condition-delta { font-size: 12px; text-align: right; margin-top: 2px; font-family: var(--font-mono); }
+.condition-delta.pos { color: var(--accent); }
+.condition-delta.neg { color: var(--red);    }
+
+/* Venue weather impact list */
+.venue-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  gap: 12px;
+}
+
+.venue-item:last-child { border-bottom: none; }
+.venue-name { font-weight: 600; font-size: 13px; }
+.venue-meta { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+.venue-impact {
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.impact-pos { background: var(--accent-dim); color: var(--accent); }
+.impact-neg { background: var(--red-dim);    color: var(--red);    }
+.impact-neu { background: rgba(148,163,184,0.08); color: var(--text-secondary); }
+
+/* =============================================================================
+   WIN PROBABILITY PAGE
+   ============================================================================= */
+
+/* Hero probability banner */
+.prob-banner {
+  background: linear-gradient(135deg, #060d1a 0%, #0a1f14 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  text-align: center;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Fine grid overlay — reinforces the technical aesthetic */
+.prob-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+/* Glow behind banner */
+.prob-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 100px;
+  background: radial-gradient(ellipse, rgba(56, 189, 131, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.prob-match {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  position: relative;
+  font-family: var(--font-mono);
+  letter-spacing: 0.5px;
+}
+
+.prob-values {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  position: relative;
+  gap: 0;
+}
+
+/* Dividers between the 3 probability columns */
+.prob-values > div:not(:last-child) {
+  border-right: 1px solid var(--border);
+}
+
+.prob-pct {
+  font-family: var(--font-mono);
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.prob-pct.team1 { color: var(--accent); }
+.prob-pct.draw  { color: var(--amber);  }
+.prob-pct.team2 { color: var(--red);    }
+
+.prob-team {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: var(--font-mono);
+}
+
+/* =============================================================================
+   Models & Methodology page — registry cards
+   ============================================================================= */
+
+.model-card { margin-bottom: 16px; }
+
+.model-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.model-card-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.model-card-headline { text-align: right; flex-shrink: 0; }
+
+.mch-val {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.mch-lbl { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }
+
+.model-card-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.model-card-meta > div > div { font-size: 12px; color: var(--text-primary); margin-top: 2px; }
+
+.model-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.mm-tile {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+
+.mm-val {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.mm-key {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  word-break: break-word;
+  font-family: var(--font-mono);
+}
+
+.model-features { margin-bottom: 12px; }
+
+.model-features summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.feature-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.chip {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+}
+
+.model-figs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.model-figs img {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: #fff;
+  display: block;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.model-figs a:hover img { transform: scale(1.02); border-color: var(--border-bright); }
+
+/* EDA notebook figures — already rendered on a dark background, so no white
+   plate behind them; just a contained, full-width responsive image. */
+.eda-fig {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  margin-top: 4px;
+}
+
+/* =============================================================================
+   Per-page "About this model" panel
+   ============================================================================= */
+
+.model-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.model-info:empty { display: none; }
+
+.mi-left { display: flex; align-items: center; gap: 12px; }
+.mi-icon { display: flex; align-items: center; color: var(--accent); }
+.mi-icon svg { width: 20px; height: 20px; display: block; }
+.mi-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.mi-right { text-align: right; }
+.mi-metric { font-family: var(--font-mono); font-size: 20px; font-weight: 700; color: var(--accent); }
+.mi-link {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--cyan);
+  cursor: pointer;
+}
+.mi-link:hover { text-decoration: underline; }
+
+/* =============================================================================
+   Responsive adjustments for page-specific layouts
+   ============================================================================= */
+
+@media (max-width: 1100px) {
+  .metrics-grid  { grid-template-columns: repeat(3, 1fr); }
+  .squad-grid    { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .metrics-grid  { grid-template-columns: repeat(2, 1fr); }
+  .cluster-grid  { grid-template-columns: 1fr 1fr; }
+  .squad-grid    { grid-template-columns: repeat(2, 1fr); }
+  .prob-pct      { font-size: 36px; letter-spacing: -1px; }
+  .prob-banner   { padding: 24px 20px; }
+}
+
+@media (max-width: 480px) {
+  .metrics-grid { grid-template-columns: 1fr 1fr; }
+  .cluster-grid { grid-template-columns: 1fr; }
+  .squad-grid   { grid-template-columns: 1fr 1fr; }
+}

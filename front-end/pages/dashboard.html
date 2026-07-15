@@ -1,0 +1,53 @@
+<!-- pages/dashboard.html -->
+<!-- Team-season summary for the selected team — all real, sourced from the
+     season xG aggregation (/api/league-xg). No vague composite scores or
+     "next match" predictions: the dataset is historical. -->
+<div class="kpi-grid">
+  <div class="kpi-card" data-tip="Matches played by the selected team this season">
+    <div class="kpi-label">Matches Played</div>
+    <div class="kpi-value shimmer" id="dashMatches" style="height:36px;width:60px">&nbsp;</div>
+    <div class="kpi-sub" id="dashSeason">&nbsp;</div>
+  </div>
+  <div class="kpi-card" data-tip="Goals scored vs expected goals (chance quality created)">
+    <div class="kpi-label">Goals For</div>
+    <div class="kpi-value text-accent shimmer" id="dashGF" style="height:36px;width:60px">&nbsp;</div>
+    <div class="kpi-sub" id="dashXGF">&nbsp;</div>
+  </div>
+  <div class="kpi-card" data-tip="Goals conceded vs expected goals against (chance quality allowed)">
+    <div class="kpi-label">Goals Against</div>
+    <div class="kpi-value text-cyan shimmer" id="dashGA" style="height:36px;width:60px">&nbsp;</div>
+    <div class="kpi-sub" id="dashXGA">&nbsp;</div>
+  </div>
+  <div class="kpi-card" data-tip="Points earned vs expected points from chance quality">
+    <div class="kpi-label">Points</div>
+    <div class="kpi-value text-amber shimmer" id="dashPts" style="height:36px;width:60px">&nbsp;</div>
+    <div class="kpi-sub" id="dashXPts">&nbsp;</div>
+  </div>
+</div>
+
+<div class="mt-16">
+  <div class="section-header">Finishing Leaders (Goals vs xG)</div>
+  <div class="squad-grid">
+    <!-- Populated by renderFinishingLeaders() -->
+  </div>
+</div>
+
+<div class="card mt-16">
+  <div class="card-title" id="leagueXgTitle">Season xG Performance — points vs expected points</div>
+  <table class="data-table" id="leagueXgTable">
+    <thead>
+      <tr>
+        <th>#</th><th>Team</th><th>P</th>
+        <th>GF</th><th>xGF</th><th>GA</th><th>xGA</th>
+        <th>xGD</th><th>Pts</th><th>xPts</th><th>Pts − xPts</th>
+      </tr>
+    </thead>
+    <tbody><!-- populated by renderLeagueXG() --></tbody>
+  </table>
+  <p class="text-muted fs-11 mt-8">
+    Expected points (xPts) model each side's goals as Poisson(team xG) per match.
+    A large positive Pts − xPts means a team has out-performed the quality of its
+    chances (finishing or goalkeeping over-performance, or variance). Aggregated
+    across all teams in the season. The selected team is highlighted.
+  </p>
+</div>

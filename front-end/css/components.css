@@ -1,0 +1,459 @@
+/* =============================================================================
+   components.css
+   Reusable UI components: cards, badges, tables, progress bars, etc.
+   All class names are generic — no page-specific styles here.
+   ============================================================================= */
+
+/* =============================================================================
+   Section header
+   ============================================================================= */
+
+.section-header {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.3px;
+  color: var(--text-primary);
+}
+
+/* Green left-border accent rule */
+.section-header::before {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* =============================================================================
+   Card — base surface
+   ============================================================================= */
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  transition: border-color var(--transition-fast);
+  position: relative;
+}
+
+.card:hover {
+  border-color: var(--border-bright);
+}
+
+.card-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* =============================================================================
+   KPI Card — prominent metric display
+   ============================================================================= */
+
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  transition:
+    border-color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-card:hover {
+  border-color: var(--border-bright);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Colored left border indicates metric category */
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+  border-radius: var(--radius) 0 0 var(--radius);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.kpi-card:hover::before {
+  opacity: 1;
+}
+
+/* Danger variant — red left border */
+.kpi-card.kpi-danger::before {
+  background: var(--red);
+  opacity: 1;
+}
+
+/* Warning variant */
+.kpi-card.kpi-warn::before {
+  background: var(--amber);
+  opacity: 1;
+}
+
+.kpi-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+}
+
+/* KPI value uses monospace so digits don't shift widths */
+.kpi-value {
+  font-family: var(--font-mono);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -1px;
+}
+
+.kpi-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.kpi-sub.up     { color: var(--accent); }
+.kpi-sub.warn   { color: var(--amber);  }
+.kpi-sub.danger { color: var(--red);    }
+
+/* =============================================================================
+   Badge
+   ============================================================================= */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-family: var(--font-mono);
+}
+
+.badge-high   {
+  background: var(--red-dim);
+  color: var(--red);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+.badge-medium {
+  background: var(--amber-dim);
+  color: var(--amber);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+.badge-low    {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid rgba(56, 189, 131, 0.25);
+}
+.badge-blue   {
+  background: var(--cyan-dim);
+  color: var(--cyan);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+}
+.badge-purple {
+  background: var(--purple-dim);
+  color: var(--purple);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+}
+
+/* =============================================================================
+   Progress bar
+   ============================================================================= */
+
+.progress-bar {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-fill.green  { background: var(--accent); }
+.progress-fill.red    { background: var(--red);    }
+.progress-fill.amber  { background: var(--amber);  }
+.progress-fill.blue   { background: var(--cyan);   }
+.progress-fill.purple { background: var(--purple); }
+
+/* Thicker variant for chart-adjacent bars */
+.progress-bar.thick { height: 6px; border-radius: 3px; }
+
+/* =============================================================================
+   Data table
+   ============================================================================= */
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.data-table th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  color: var(--text-muted);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 11px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+  transition: background var(--transition-fast);
+}
+
+/* Monospace numbers in table cells */
+.data-table td.num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* Alternating row tint */
+.data-table tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.data-table tbody tr:hover td {
+  background: var(--accent-dim);
+}
+
+/* Clickable rows (drill-down to a single player) */
+.data-table tbody tr.clickable {
+  cursor: pointer;
+}
+
+.data-table tbody tr.row-selected td {
+  background: var(--accent-dim);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* =============================================================================
+   Risk score bar (injury table)
+   ============================================================================= */
+
+.risk-score-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.risk-bar {
+  flex: 1;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.risk-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+/* =============================================================================
+   Factor row (SHAP / win probability inputs)
+   ============================================================================= */
+
+.factors-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.factors-item:last-child {
+  border-bottom: none;
+}
+
+.factor-name {
+  font-size: 12px;
+  flex: 0 0 170px;
+  color: var(--text-secondary);
+}
+
+.factor-bar-wrap { flex: 1; }
+
+.factor-val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  flex: 0 0 60px;
+  text-align: right;
+}
+
+/* =============================================================================
+   Inline stat row (simple label/value pair)
+   ============================================================================= */
+
+.inline-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.inline-stat-label { font-size: 12px; color: var(--text-secondary); }
+.inline-stat-val   {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* =============================================================================
+   Player list item (cohesion page)
+   ============================================================================= */
+
+.player-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.player-list-item:last-child {
+  border-bottom: none;
+}
+
+.player-list-name { font-weight: 600; font-size: 13px; }
+.player-list-role { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+.player-centrality {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cyan);
+  text-align: right;
+}
+
+/* =============================================================================
+   Chart wrapper
+   ============================================================================= */
+
+.chart-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.chart-wrap canvas {
+  width: 100% !important;
+}
+
+/* =============================================================================
+   Tooltip
+   ============================================================================= */
+
+.tooltip {
+  position: fixed;
+  z-index: 9999;
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  padding: 7px 11px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  pointer-events: none;
+  display: none;
+  max-width: 220px;
+  box-shadow: var(--shadow);
+  line-height: 1.5;
+}
+
+/* =============================================================================
+   Accuracy numbers block (win probability page)
+   ============================================================================= */
+
+.accuracy-nums {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.acc-num { text-align: center; }
+
+.acc-val {
+  font-family: var(--font-mono);
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.acc-val.pos { color: var(--accent); }
+.acc-val.neg { color: var(--red);    }
+
+.acc-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+/* =============================================================================
+   Empty state
+   ============================================================================= */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  color: var(--text-muted);
+  text-align: center;
+  gap: 8px;
+}
+
+.empty-state-icon { font-size: 32px; margin-bottom: 4px; }
+.empty-state-text { font-size: 13px; }
+.empty-state-sub  { font-size: 11px; }

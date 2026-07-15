@@ -1,0 +1,25 @@
+<!-- pages/models.html — model registry: methodology, metrics, diagnostics -->
+<div class="section-header">Models &amp; Methodology</div>
+<p class="text-muted fs-12" style="margin-bottom:14px">
+  Every model is trained offline (<code>python main.py --train</code>), evaluated
+  with leakage-safe cross-validation (GroupKFold / StratifiedGroupKFold by match,
+  plus a held-out 2022 season), and registered in PostgreSQL. The cards below are
+  generated live from the <code>model_registry</code> table via
+  <code>/api/models</code>; diagnostic figures are served from the trained
+  artifacts.
+</p>
+
+<div class="card">
+  <div class="card-title">Expected Goals — validation against StatsBomb's professional xG</div>
+  <div class="chart-wrap" style="height:260px"><canvas id="xgBenchmarkChart"></canvas></div>
+  <p class="text-muted fs-11 mt-8">
+    Our from-scratch xG model is benchmarked on the same shots against StatsBomb's
+    own xG and a naive league-average baseline (out-of-fold, grouped by match).
+    Competitive ROC-AUC and log-loss show the model is genuinely calibrated, not
+    just memorising.
+  </p>
+</div>
+
+<div id="modelsContainer" class="mt-16">
+  <div class="card text-muted text-center" style="padding:32px">Loading model registry…</div>
+</div>

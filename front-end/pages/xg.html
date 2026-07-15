@@ -1,0 +1,67 @@
+<!-- pages/xg.html -->
+<div class="model-info" data-model="model_xg"></div>
+<div class="kpi-grid">
+  <div class="kpi-card" data-tip="Sum of our model's expected goals for the team's shots">
+    <div class="kpi-label">Team xG</div>
+    <div class="kpi-value text-accent shimmer" style="height:36px;width:60px">&nbsp;</div>
+    <div class="kpi-sub">Expected goals</div>
+  </div>
+  <div class="kpi-card" data-tip="Goals actually scored">
+    <div class="kpi-label">Goals Scored</div>
+    <div class="kpi-value text-cyan shimmer" style="height:36px;width:60px">&nbsp;</div>
+    <div class="kpi-sub">Actual</div>
+  </div>
+  <div class="kpi-card" data-tip="Goals minus xG. Positive = clinical finishing; negative = underperforming chances">
+    <div class="kpi-label">Finishing (G − xG)</div>
+    <div class="kpi-value shimmer" style="height:36px;width:60px">&nbsp;</div>
+    <div class="kpi-sub">Over / under-performance</div>
+  </div>
+  <div class="kpi-card" data-tip="Total shots taken">
+    <div class="kpi-label">Shots</div>
+    <div class="kpi-value text-amber shimmer" style="height:36px;width:60px">&nbsp;</div>
+    <div class="kpi-sub">Total attempts</div>
+  </div>
+</div>
+
+<div class="card mb-16">
+  <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+    <span>Shot Map — sized by xG</span>
+    <span id="shotMapSel" class="text-muted fs-11"></span>
+  </div>
+  <div class="shot-map-wrap">
+    <canvas id="shotMapChart"></canvas>
+  </div>
+  <p class="text-muted fs-11 mt-8">
+    Each marker is a shot at its pitch location (attacking third, goal at the top).
+    Marker size scales with xG;
+    <span style="color:var(--accent);font-weight:600">green = goal</span>,
+    <span style="color:#8896aa;font-weight:600">grey = no goal</span>.
+    Hover for player, xG, body part and minute.
+  </p>
+</div>
+
+<div class="card mb-16">
+  <div class="card-title">Goals vs Expected Goals — top players</div>
+  <div class="chart-wrap" style="height:260px">
+    <canvas id="xgChart"></canvas>
+  </div>
+  <p class="text-muted fs-11 mt-8">
+    xG from an in-house model (HistGradientBoosting on shot geometry, body part,
+    play pattern and freeze-frame defender/keeper context). Out-of-fold log-loss
+    0.254 vs StatsBomb 0.253; ROC-AUC 0.83; well-calibrated; held-out WC-2022
+    ROC-AUC 0.85.
+  </p>
+</div>
+
+<div class="card">
+  <div class="card-title">Finishing leaderboard (Goals vs xG)</div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Player</th><th>Pos</th><th>Shots</th><th>Goals</th>
+        <th>xG</th><th>G − xG</th>
+      </tr>
+    </thead>
+    <tbody><!-- populated by renderXG() --></tbody>
+  </table>
+</div>
