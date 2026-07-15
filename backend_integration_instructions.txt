@@ -1,0 +1,625 @@
+MODEL 1 — BACKEND INTEGRATION INSTRUCTIONS
+==========================================
+
+
+WHAT THE MODEL PRODUCES
+-----------------------
+The pipeline outputs one file: artifacts/model1/player_clusters.parquet
+Every row is a player-season.
+
+Columns you need:
+
+  player_id               — join key to your players table
+  player_name             — display name
+  season                  — e.g. "2022" or "2015/2016"
+  primary_style           — e.g. "Deep Playmaker"
+  secondary_style         — e.g. "Box-to-Box" — empty string if none
+  spatial_cluster_name    — e.g. "Left Wide Defender"
+  final_player_archetype  — combined display label e.g. "Deep Playmaker · Box-to-Box · Left Wide Defender"
+  probability_vector      — JSON string of style probabilities per cluster (use for confidence breakdown UI)
+  xg_90, xa_90, shots_90, goals_90, passes_90, pass_accuracy,
+  carries_90, touches_90, progressive_actions_90,
+  tackles_90, interceptions_90, pressures_90
+                          — the 12 per-90 stats used for styling
+
+
+HOW TO SERVE IT
+---------------
+The parquet is pre-computed. Do NOT re-run the model on request.
+Two options:
+
+  Option 1 — Load parquet at startup
+    Read it into memory once when the API starts, query it in-process.
+    Fast, zero DB overhead.
+
+  Option 2 — Write to a DB table
+    After each pipeline run:  df.to_sql('player_clusters', engine)
+    Serve from there. Better if you want SQL joins with other tables.
+
+
+ENDPOINTS YOU WILL LIKELY NEED
+-------------------------------
+  GET /players/{player_id}/profile     — return that player's rows across all seasons
+  GET /players/search?name=Salah       — fuzzy name filter
+  GET /clusters/spatial?zone=Left+Wide+Defender   — all players in a given zone
+  GET /clusters/style?style=Deep+Playmaker        — all players of a given primary style
+
+
+WHEN DOES THE DATA UPDATE
+--------------------------
+The pipeline is run manually:
+  python -m models.model1_player_clustering
+
+Each run overwrites the parquet and the report at artifacts/model1/model1_report.txt
+After each pipeline run, reload the parquet (or re-ingest to DB).
+There is no live inference — everything is batch.
+
+
+GOTCHA — SEASON FORMAT
+-----------------------
+The season column is a string but the format is inconsistent:
+  some rows:  "2022"
+  some rows:  "2015/2016"
+Always treat season as a string. Never cast to int.
+Filter with exact string match:  WHERE season = '2022'
+
+
+
+
+MODEL 2 — BACKEND INTEGRATION INSTRUCTIONS
+===========================================
+(Team Cohesion — pass-network graph analysis + regression)
+
+
+THERE ARE TWO MODEL 2 ARTIFACT SETS
+------------------------------------
+v1 (production, ALREADY wired into api_server.py — no action needed)
+  artifacts/model2/scaler.pkl
+  artifacts/model2/gbr.pkl
+  artifacts/model2/ridge.pkl
+  artifacts/model2/graph_features.parquet
+
+v2 / "postmatch" (optimized, built but NOT yet wired into api_server.py —
+  see "HOW TO UPGRADE" below if you want to switch to it)
+  artifacts/model2/scaler_postmatch.pkl
+  artifacts/model2/gbr_postmatch.pkl
+  artifacts/model2/feature_columns_postmatch.json
+  artifacts/model2/graph_features_optimized.parquet
+  artifacts/model2/model2_optimized_metadata.json
+
+Both are "postmatch/explanatory" models: they use this match's own xG and
+pass-network features to explain a result, NOT to forecast one before
+kickoff. Don't expose either as a pre-match prediction in the UI.
+
+
+WHAT THE MODEL PRODUCES (v1, currently served)
+------------------------------------------------
+artifacts/model2/graph_features.parquet — one row per (match_id, team_id).
+
+Columns you need:
+
+  match_id, team_id        — join keys
+  goals                     — actual goals scored (the training target)
+  network_density, clustering_coefficient,
+  mean_in_centrality, mean_out_centrality,
+  mean_betweenness, max_betweenness,
+  mean_pagerank, max_pagerank,
+  n_nodes, n_edges, total_passes, pass_per_edge
+                            — 12 raw graph features (in this exact order)
+  team_xg, team_xga, is_home, opponent_quality
+                            — 4 context features (in this exact order)
+
+scaler.pkl + gbr.pkl expect EXACTLY this 16-feature vector, in this order
+(see api_server.py's /api/team-cohesion handler, which hardcodes the same
+GRAPH_FEATURES + CONTEXT_FEATURES lists — keep both copies in sync if you
+ever change models/model2_team_cohesion.py's MODEL_FEATURES).
+
+
+HOW TO SERVE IT (v1)
+-----------------------
+Already implemented in api_server.py:
+  - graph_features.parquet, scaler.pkl, gbr.pkl are loaded once at startup
+    into the _A["m2"] dict (see _load_all_artifacts()).
+  - GET /api/team-cohesion?team_id=N reads the team's rows from the
+    parquet, averages the 16 features, scales them, and calls
+    gbr.predict() for predicted_goals_per_match.
+Do NOT re-run the model per request — it's a batch artifact, same pattern
+as Model 1.
+
+
+HOW TO UPGRADE TO v2 (optional — not done yet)
+-------------------------------------------------
+If you want /api/team-cohesion to use the optimized model instead:
+
+  1. Load the new artifacts at startup (mirror the existing _load()/_parquet()
+     pattern in api_server.py's _load_all_artifacts()):
+       gbr_postmatch    = _load(a / "model2" / "gbr_postmatch.pkl")
+       scaler_postmatch = _load(a / "model2" / "scaler_postmatch.pkl")
+       feat_df_v2       = _parquet(a / "model2" / "graph_features_optimized.parquet")
+       with open(a / "model2" / "feature_columns_postmatch.json") as f:
+           POSTMATCH_FEATURES = json.load(f)   # 18 features, EXACT order matters
+
+  2. Replace the hardcoded GRAPH_FEATURES/CONTEXT_FEATURES/MODEL_FEATURES
+     lists in the /api/team-cohesion handler with POSTMATCH_FEATURES loaded
+     from feature_columns_postmatch.json above. Do not hand-type this list —
+     it changes if the model is re-tuned (see GOTCHA below).
+
+  3. graph_features_optimized.parquet has MORE columns than graph_features.parquet
+     (24 raw graph features instead of 12, since multicollinear ones were only
+     dropped from the MODEL's feature list, not from the saved parquet). Select
+     columns by name from POSTMATCH_FEATURES, never by position.
+
+  4. scaler_postmatch.pkl + gbr_postmatch.pkl is an ExtraTreesRegressor pipeline
+     (not GBR) as of the last training run — don't assume the algorithm type
+     in any logging/debug code that branches on it.
+
+  5. Keep v1 artifacts in place even after upgrading the live endpoint —
+     other code (or a future rollback) may still reference gbr.pkl/scaler.pkl.
+
+
+ENDPOINTS
+-----------
+  GET /api/team-cohesion?team_id=N   — already implemented (see api_server.py)
+    Returns: kpi (cohesion_index, network_density, avg_degree, clustering_coeff,
+    predicted_goals_per_match), nodes (player positions for the pitch diagram),
+    edges (pass connections for the pass-network visualization), source.
+
+No new endpoints are required for v2 — same shape, just a different
+predict() call once you opt in.
+
+
+WHEN DOES THE DATA UPDATE
+----------------------------
+The pipeline is run manually, not on a schedule:
+
+  v1 (production):    python -m models.model2_team_cohesion
+  v2 (optimized):      python -m models.model2_team_cohesion --optimize
+
+Each run overwrites its own artifact set and report:
+  v1 report: (printed to console/log only, no file)
+  v2 report: artifacts/model2/model2_optimized_diagnostics.txt
+
+Re-run v1 (and reload api_server.py's in-memory artifacts, or restart the
+process) any time pass_network_edges/player_match_stats/matches change --
+e.g. after a fresh `python main.py` ingestion run.
+
+There is no live inference — everything is batch, same as Model 1.
+
+
+GOTCHAS
+---------
+1. FEATURE ORDER MUST MATCH TRAINING ORDER
+   scaler.transform() / gbr.predict() expect columns in the exact order the
+   scaler was fit on. v1's order is fixed by models/model2_team_cohesion.py's
+   MODEL_FEATURES list (hardcoded twice -- once there, once duplicated in
+   api_server.py's /api/team-cohesion handler. Keep both in sync). v2's order
+   is NOT hardcoded anywhere in the backend; it must be read from
+   feature_columns_postmatch.json at startup, because it can change if the
+   model is re-tuned/re-run.
+
+2. THIS IS AN EXPLANATORY MODEL, NOT A FORECAST
+   Both v1 and v2 use this match's own team_xg/team_xga (and v2 also uses
+   this match's own pass-network features). They answer "given the chances
+   created, how much did cohesion explain the result" -- not "what will
+   happen before kickoff." Do not label predicted_goals_per_match in the UI
+   as a pre-match prediction. A genuine pre-match variant was built and
+   evaluated (rolling 5-match team history only) and explained far less
+   variance (R2~0.08-0.11 vs ~0.34-0.35) -- it was intentionally not shipped.
+
+3. v2's graph_features_optimized.parquet is NOT a drop-in replacement file
+   name for graph_features.parquet -- they have different schemas (24 vs 12
+   raw graph columns). Don't point old code at the new file or vice versa.
+
+4. NaN HANDLING
+   Both pipelines fillna(0) before scaling/predicting. If you add a new
+   team/match with missing graph features (e.g. a match with zero passing
+   data), it will silently predict from zeros rather than erroring -- treat
+   a near-zero feature vector as a signal to fall back to the dashboard's
+   existing fallback KPI block rather than trusting the prediction.
+
+5. SCALE OF THE NUMBERS
+   R2~0.34-0.35 means the model explains about a third of goal variance.
+   MAE is ~0.78-0.79 goals. Don't present predicted_goals_per_match with
+   false precision (e.g. "2.347 goals") -- round to 1-2 decimals and treat
+   it as directional, not exact.
+
+
+
+
+MODEL 3 — BACKEND INTEGRATION INSTRUCTIONS
+===========================================
+(Injury Risk -- workload/recovery features, binary classification)
+
+
+THERE ARE THREE MODEL 3 ARTIFACT SETS
+----------------------------------------
+v1 (production, ALREADY wired into api_server.py -- no action needed)
+  artifacts/model3/xgb.pkl
+  artifacts/model3/rf.pkl
+  artifacts/model3/lr.pkl
+  artifacts/model3/scaler.pkl
+  artifacts/model3/features.parquet
+
+v2 / "optimized" (same-match, built but NOT wired into api_server.py)
+  artifacts/model3/histgradientboosting_optimized.pkl
+  artifacts/model3/scaler_optimized.pkl
+  artifacts/model3/feature_columns_optimized.json
+  artifacts/model3/features_optimized.parquet
+
+v3 / "prematch" (genuine before-kickoff forecast, built but NOT wired into
+  api_server.py -- the one you'd actually want for a live "should we rest
+  this player" decision; see "HOW TO UPGRADE" below)
+  artifacts/model3/model3_prematch_best.pkl
+  artifacts/model3/scaler_prematch.pkl
+  artifacts/model3/feature_columns_prematch.json
+  artifacts/model3/thresholds_prematch.json
+
+v1 and v2 are BOTH "post-appearance" models: they use THIS match's own
+minutes_played/xg/xa/pressures/tackles/carry_distance/interceptions/
+clearances/sub_minute as features, so they answer "given how this match
+went, what's this player's risk now" -- not a pre-match forecast. v3 drops
+every one of those same-match features and uses ONLY information knowable
+before kickoff (age, prior workload/rest, injury history, announced lineup
+position) -- it is the only one of the three that can honestly be labelled
+a pre-match prediction in the UI.
+
+
+WHAT THE MODEL PRODUCES (v1, currently served)
+------------------------------------------------
+artifacts/model3/features.parquet -- one row per (player_id, match_id).
+
+xgb.pkl/rf.pkl + scaler.pkl expect EXACTLY this 13-feature vector, in this
+order (see api_server.py's /api/injury-risk handler, which hardcodes the
+same FEATURES list -- keep both copies in sync if you ever change
+models/model3_injury_risk.py's FEATURES):
+
+  minutes_played, matches_last_30_days, minutes_last_30_days,
+  days_since_last_injury, age_at_match, sub_minute_flag,
+  xg, xa, pressures, tackles, carry_distance, interceptions, clearances
+
+
+HOW TO SERVE IT (v1)
+-----------------------
+Already implemented in api_server.py:
+  - xgb.pkl, rf.pkl, scaler.pkl are loaded once at startup into the
+    _A["m3"] dict (see _load_all_artifacts()).
+  - GET /api/injury-risk?team_id=N queries the last 3+ matches per player
+    on that team, averages the 13 features per player, scales them, and
+    calls model.predict_proba() for risk_score.
+  - risk_score is bucketed into high (>=0.67) / medium (0.4-0.67) / low
+    (<0.4) inside _injury_response() -- these cutoffs are HARDCODED for
+    v1's probability distribution. See GOTCHA 5 before reusing them for v3.
+Do NOT re-run the model per request -- it's a batch artifact, same pattern
+as Model 1/Model 2.
+
+
+HOW TO UPGRADE TO v3 (optional -- not done yet, and not a drop-in swap)
+--------------------------------------------------------------------------
+This is NOT like the Model 2 v1->v2 upgrade (same query, swap two .pkl
+files). v3's feature set is almost entirely different from v1's, so the
+SQL query inside /api/injury-risk has to be rewritten, not just the model.
+
+  1. Load the new artifacts at startup:
+       prematch_model = _load(a / "model3" / "model3_prematch_best.pkl")
+       prematch_prep  = _load(a / "model3" / "scaler_prematch.pkl")   # a
+                         # fitted ColumnTransformer (scaling + one-hot), not
+                         # a plain StandardScaler -- see GOTCHA 1.
+       with open(a / "model3" / "feature_columns_prematch.json") as f:
+           PREMATCH_FEATURES = json.load(f)   # 15 features, EXACT order
+       with open(a / "model3" / "thresholds_prematch.json") as f:
+           PREMATCH_TIERS = json.load(f)      # Low/Medium/High/Very High
+
+  2. PREMATCH_FEATURES is:
+       matches_last_30_days, age_at_match, matches_last_7_days,
+       matches_last_14_days, consecutive_matches_played,
+       days_rest_before_match, days_since_last_injury_capped,
+       starts_last_5_matches, avg_minutes_last_5, max_minutes_last_5,
+       consecutive_starts, recent_substitute_pattern,
+       previous_injury_count, position_group, injury_recency_bucket
+     None of these are simple AVG()-over-recent-matches like v1's query --
+     they are point-in-time, strictly-prior-to-this-match rolling/streak/
+     history features computed per player. You cannot compute them with a
+     one-line SQL AVG(); the logic lives in
+     models/model3_injury_risk.py's _add_streak_and_rest(),
+     _add_rolling_workload(), _add_count_window_features(),
+     _add_injury_history_features() and _map_position_group(). Either port
+     that logic into the API's query layer, or (simpler) have the training
+     pipeline write a per-player "current state" snapshot table/parquet
+     after each run that the API just looks up by player_id.
+
+  3. position_group and injury_recency_bucket are STRINGS (categorical),
+     not numbers. scaler_prematch.pkl's ColumnTransformer one-hot-encodes
+     them internally -- pass the raw string values straight into
+     prematch_prep.transform(), do not encode them yourself first.
+
+  4. Call prematch_prep.transform(raw_df[PREMATCH_FEATURES]) then
+     prematch_model.predict_proba(...)[:, 1] -- two steps, same shape as v1
+     (transform, then predict), just with a richer transformer.
+
+  5. Keep v1/v2 artifacts in place even after upgrading the live endpoint.
+
+
+ENDPOINTS
+-----------
+  GET /api/injury-risk?team_id=N   -- already implemented (see api_server.py)
+    Returns: kpi (high/medium/low counts, avg_score), players (player_name,
+    position, workload_30d, days_since_last_injury, risk_score), source.
+
+No new endpoint is required for v3 -- same response shape, just swap which
+model produces risk_score (and, per GOTCHA 5, which thresholds bucket it).
+
+
+WHEN DOES THE DATA UPDATE
+----------------------------
+The pipeline is run manually, not on a schedule:
+
+  v1 (production):   python -m models.model3_injury_risk
+  v2 (optimized):     python -m models.model3_injury_risk --optimize
+  v3 (prematch):      python -m models.model3_injury_risk --optimize-v2
+
+Each run overwrites its own artifact set and report:
+  v1 report: (printed to console/log only, no file)
+  v2 report: artifacts/model3/model3_optimized_diagnostics.txt
+  v3 report: artifacts/model3/model3_optimized_diagnostics_v2.txt
+
+Re-run v1 (and reload api_server.py's in-memory artifacts, or restart the
+process) any time player_match_stats/player_match_features/injuries change
+-- e.g. after a fresh `python main.py` ingestion run.
+
+There is no live inference -- everything is batch, same as Model 1/Model 2.
+
+
+GOTCHAS
+---------
+1. scaler_prematch.pkl IS NOT A PLAIN SCALER
+   v1's scaler.pkl is a StandardScaler. v3's scaler_prematch.pkl is a fitted
+   sklearn ColumnTransformer (StandardScaler on the numeric columns +
+   OneHotEncoder on position_group/injury_recency_bucket). Calling
+   .transform() works the same way, but don't assume its output width
+   equals len(PREMATCH_FEATURES) -- one-hot encoding expands the two
+   categorical columns into several columns each.
+
+2. THIS IS A REAL PRE-MATCH MODEL -- BUT v1/v2 ARE NOT
+   v1 and v2 both use THIS match's own minutes_played/xg/xa/pressures/
+   tackles/etc, so they describe "given how this match went" -- not a
+   forecast. Only v3 (prematch) excludes all of that and can honestly be
+   shown as a pre-kickoff prediction. Don't relabel v1/v2's output as a
+   forecast in the UI.
+
+3. FEATURE ORDER MUST MATCH TRAINING ORDER
+   Same rule as Model 2: v1's order is fixed by FEATURES in
+   models/model3_injury_risk.py (hardcoded twice -- once there, once in
+   api_server.py's /api/injury-risk handler; keep both in sync). v3's order
+   must be read from feature_columns_prematch.json at startup, never
+   hand-typed, because it can change if the model is re-tuned/re-run.
+
+4. NaN HANDLING
+   All three pipelines fillna(0) numeric columns (and "unknown" for v3's
+   categorical columns) before scaling/predicting. A player with no
+   workload/injury history yet will silently predict from a near-default
+   feature vector rather than erroring -- treat that as a signal to flag
+   the prediction as low-confidence rather than trusting it outright.
+
+5. v1's RISK BUCKETS (high>=0.67) WILL NOT WORK FOR v3 -- DO NOT REUSE THEM
+   v3's predicted probabilities top out around ~0.72 and its OWN data-driven
+   "Very High" tier starts at 0.249 (see thresholds_prematch.json), not
+   0.67. If you swap in the v3 model but keep _injury_response()'s
+   hardcoded high/medium/low cutoffs, almost no player will ever be flagged
+   "high risk" -- the cutoffs were tuned to v1's distribution, not v3's.
+   Use thresholds_prematch.json's Low/Medium/High/Very High score_low/
+   score_high bounds instead, and show the observed_injury_rate it stores
+   per tier in the UI -- that's the genuinely useful number (e.g.
+   "Very High risk players are actually injured within 30 days ~32% of the
+   time in our data" is more honest and more useful than a bare 0-1 score).
+
+6. SCALE OF THE NUMBERS -- AUC-PR, NOT JUST AUC-ROC
+   v3's AUC-ROC (~0.68-0.72) looks decent but is misleading at this ~10%
+   positive rate -- it's dominated by how well the large majority of
+   non-injured rows rank against each other. AUC-PR (~0.10-0.22 depending
+   on the split) is the honest number: a baseline that always predicts "no
+   injury" gets AUC-PR equal to the positive rate (~0.10), so the model is
+   meaningfully but not dramatically better than that. Don't present
+   risk_score as a confident probability of injury -- present it as a
+   relative ranking/tier, which is what the risk tiers in GOTCHA 5 are for.
+
+
+
+
+MODEL 5A -- BACKEND INTEGRATION INSTRUCTIONS
+===============================================
+(Win Probability -- STATIC / pre-match sub-model only. 5B, the dynamic/
+in-game sub-model, is a separate model with its own artifacts and is not
+covered by this section.)
+
+
+THERE ARE TWO MODEL 5A ARTIFACT SETS
+----------------------------------------
+v1 (production, ALREADY wired into api_server.py -- no action needed)
+  artifacts/model5/gbc_pre.pkl
+  artifacts/model5/scaler_pre.pkl
+  artifacts/model5/features_pre.parquet
+
+v2 / "optimized" (built but NOT wired into api_server.py -- see "HOW TO
+  UPGRADE" below; read GOTCHA 1 before attempting this one, it is NOT a
+  drop-in swap like Model 2's was)
+  artifacts/model5/gbc_pre_optimized.pkl
+  artifacts/model5/scaler_pre_optimized.pkl
+  artifacts/model5/feature_columns_pre_optimized.json
+  artifacts/model5/features_pre_optimized.parquet
+  artifacts/model5/model5_optimized_diagnostics.txt
+  artifacts/model5/model5_optimized_metadata.json
+
+Both are genuine pre-match forecasts (no in-match data in either) -- the
+difference is v1 only looks at the requesting team's own recent form; v2
+adds the opponent's form, season-to-date points-per-game, and an Elo
+rating for both teams. v2 is the methodologically stronger model, but it
+needs information the current endpoint doesn't collect (see GOTCHA 1).
+
+
+WHAT THE MODEL PRODUCES (v1, currently served)
+-------------------------------------------------
+artifacts/model5/features_pre.parquet -- one row per (match_id, team_id).
+Multiclass target: loss=0, draw=1, win=2 (RESULT_MAP in
+models/model5_win_probability.py). predict_proba()'s column order follows
+gbc.classes_, NOT necessarily [0,1,2] -- always map via classes_, never by
+position (api_server.py already does this correctly, keep that pattern).
+
+gbc_pre.pkl + scaler_pre.pkl expect EXACTLY this 9-feature vector, in this
+order (hardcoded in TWO places in api_server.py -- the /api/win-probability
+handler AND _m5_win_pct_direct(), used by /api/dashboard; keep both in sync
+if you ever change models/model5_win_probability.py's FEATURES_PRE_MATCH):
+
+  avg_xg_last5, avg_shots_last5, avg_passes_last5, avg_pass_acc_last5,
+  avg_tackles_last5, avg_pressures_last5, red_cards_match, subs_made,
+  is_home
+
+Note what is absent: there is no opponent feature of any kind. v1 predicts
+a team's win/draw/loss distribution from its own recent form alone.
+
+
+HOW TO SERVE IT (v1)
+-----------------------
+Already implemented in api_server.py:
+  - gbc_pre.pkl, scaler_pre.pkl, features_pre.parquet (as df_pre) are
+    loaded once at startup into the _A["m5"] dict (see _load_all_artifacts()).
+  - GET /api/win-probability?team_id=N tries, in order: (a) a live DB query
+    averaging the team's last 5 player_match_stats rows, scaled + scored
+    via gbc_pre/scaler_pre with red_cards_match/subs_made hardcoded to
+    0/3 and is_home hardcoded to 1; (b) the same features pulled from the
+    in-memory df_pre parquet if the DB path fails; (c) a deterministic
+    fallback formula keyed only on team_id if both fail. Always check
+    the response's "source" field (database+model5 / database / artifact /
+    fallback) before trusting win/draw/loss as model output.
+  - The per-minute win/draw/loss series returned alongside win/draw/loss is
+    NOT model output at any point -- it's a hand-rolled linear curve
+    (win + (minute-45)*0.08 etc., see win_probability()'s last ~10 lines).
+    Model 5B (the real in-game model, gbc_ingame.pkl) is trained but never
+    called here. Don't describe the in-game curve in the UI as coming from
+    the model.
+Do NOT re-run the model per request -- it's a batch artifact, same pattern
+as Models 1-3.
+
+
+HOW TO UPGRADE TO v2 (optional -- not done yet, and NOT a drop-in swap)
+----------------------------------------------------------------------------
+  1. Load the new artifacts at startup:
+       gbc_pre_v2    = _load(a / "model5" / "gbc_pre_optimized.pkl")
+       scaler_pre_v2 = _load(a / "model5" / "scaler_pre_optimized.pkl")
+       with open(a / "model5" / "feature_columns_pre_optimized.json") as f:
+           PRE_FEATURES_V2 = json.load(f)   # 26 features, EXACT order matters
+
+  2. Replace the hardcoded FEATURES_PRE lists in BOTH /api/win-probability
+     and _m5_win_pct_direct() with PRE_FEATURES_V2 loaded above. Do not
+     hand-type this list -- 2 of the 28 originally engineered candidates
+     (avg_pass_acc_last3, avg_pass_acc_last3_opp) were dropped by a
+     multicollinearity audit, so the saved list is shorter than the full
+     feature-engineering description in model5_optimized_diagnostics.txt.
+
+  3. PRE_FEATURES_V2 is, in order:
+       avg_xg_last5, avg_shots_last5, avg_passes_last5, avg_pass_acc_last5,
+       avg_tackles_last5, avg_pressures_last5, red_cards_match, subs_made,
+       is_home, avg_xg_last3, goal_diff_last5, points_last3,
+       season_points_per_game, opp_season_points_per_game,
+       avg_xg_last5_opp, avg_shots_last5_opp, avg_passes_last5_opp,
+       avg_pass_acc_last5_opp, avg_tackles_last5_opp, avg_pressures_last5_opp,
+       avg_xg_last3_opp, goal_diff_last5_opp, points_last3_opp,
+       elo_pre, opp_elo_pre, elo_diff
+
+  4. Keep v1 artifacts in place even after upgrading the live endpoint.
+
+
+ENDPOINTS
+-----------
+  GET /api/win-probability?team_id=N   -- already implemented (see api_server.py)
+    Returns: win/draw/loss percentages, a 91-point per-minute series, source.
+
+No new endpoint is required to keep serving v1. Upgrading to v2 WITHOUT
+adding an opponent parameter is possible but wastes most of v2's value
+(see GOTCHA 1) -- if you upgrade, add opponent_team_id as a required query
+param at the same time:
+  GET /api/win-probability?team_id=N&opponent_team_id=M
+
+
+WHEN DOES THE DATA UPDATE
+----------------------------
+The pipeline is run manually, not on a schedule:
+
+  v1 (production):              python -m models.model5_win_probability
+  v2 (optimized, both modes):   python -m models.model5_win_probability --optimize
+  v2 (optimized, 5A only):      python -m models.model5_win_probability --optimize --mode pre
+
+Each run overwrites its own artifact set and report:
+  v1 report: (printed to console/log only, no file)
+  v2 report: artifacts/model5/model5_optimized_diagnostics.txt (covers
+             5A and 5B in one file -- look for the "MODEL 5A" header)
+
+Re-run v1 (and reload api_server.py's in-memory artifacts, or restart the
+process) any time player_match_stats/matches change -- e.g. after a fresh
+`python main.py` ingestion run.
+
+There is no live inference -- everything is batch, same as Models 1-3.
+
+
+GOTCHAS
+---------
+1. v2 NEEDS AN OPPONENT -- THE CURRENT ENDPOINT DOESN'T COLLECT ONE
+   /api/win-probability's signature is win_probability(team_id: int) --
+   there is no opponent parameter anywhere in the request. 17 of v2's 26
+   features are opponent-relative (every *_opp column, plus elo_diff and
+   season_points_per_game's partner opp_season_points_per_game). If you
+   wire in v2 without adding an opponent_team_id parameter, you would have
+   to zero-fill or guess every opponent feature, which throws away most of
+   why v2 outperforms v1 (see GOTCHA 3). This is the central design change
+   needed before v2 is worth deploying -- it is not just a file swap like
+   Model 2's v1->v2 upgrade was.
+
+2. elo_pre/opp_elo_pre/elo_diff ARE NOT A SIMPLE SQL LOOKUP
+   Unlike every other v2 feature (which is some AVG()/SUM() over recent
+   matches, computable per-request), Elo is a STATEFUL, ITERATIVE rating:
+   each team's current Elo depends on the full chronological sequence of
+   every match it has ever played in this dataset, updated one match at a
+   time (see _compute_elo_ratings() in models/model5_win_probability.py).
+   You cannot reconstruct a team's current rating from a single SQL query.
+   Two options for serving this live:
+     a) Call _compute_elo_ratings(conn) at request time and take the last
+        row for each team_id -- correct, but recomputes the full match
+        history (all ~2000+ matches) on every request. Fine for batch,
+        too slow for a hot endpoint at scale.
+     b) (Recommended) Have the training pipeline write a small
+        "team_id -> current_elo" snapshot (table or JSON) after each run,
+        and have the API look that up instead of recomputing from scratch.
+        This file does not exist yet -- you would need to add it.
+   K=20, home-advantage=100 elo points convention -- if you build a live
+   updater instead of just snapshotting, replicate the exact same K/HFA/
+   goal-diff-multiplier constants or ratings will silently diverge from
+   what the model was trained on.
+
+3. FEATURE ORDER MUST MATCH TRAINING ORDER
+   Same rule as Models 2/3: v1's order is fixed by FEATURES_PRE_MATCH in
+   models/model5_win_probability.py (hardcoded in TWO places in
+   api_server.py -- keep both in sync). v2's order must be read from
+   feature_columns_pre_optimized.json at startup, never hand-typed.
+
+4. NaN HANDLING
+   Both pipelines fillna(0) before scaling/predicting. A team with no
+   match history yet (or, for v2, an opponent with no history) will
+   silently predict from a near-zero feature vector rather than erroring
+   -- treat that as a signal to fall back to v1 or the dashboard's
+   existing fallback formula rather than trusting the prediction.
+
+5. THE IN-GAME CURVE IN THE CURRENT RESPONSE IS NOT A MODEL PREDICTION
+   See "HOW TO SERVE IT" above -- the per-minute series in the existing
+   /api/win-probability response is a hardcoded formula, not Model 5B's
+   output. Wiring up the real in-game model (gbc_ingame.pkl / v2's
+   gbc_ingame_optimized.pkl) is a separate task from this one.
+
+6. SCALE OF THE NUMBERS
+   v2's held-out-2022 accuracy is ~0.46 against a naive (always-predict-
+   majority-class) baseline of ~0.37 -- a real but modest lift, not a
+   confident predictor. The draw class in particular is almost never
+   correctly predicted on held-out data (see the confusion matrix in
+   model5_optimized_diagnostics.txt) -- this is a well-known limitation in
+   football outcome forecasting generally, not a bug. Present win/draw/
+   loss percentages as directional, not as confident probabilities, and
+   don't be surprised if "draw" stays under-represented in predictions
+   even when it's the right call.
