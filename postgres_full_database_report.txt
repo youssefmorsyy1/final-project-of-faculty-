@@ -1,0 +1,1256 @@
+================================================================================
+POSTGRESQL FULL DATABASE TEXT REPORT
+================================================================================
+
+################################################################################
+TABLE: injuries
+################################################################################
+
+Row Count: 32495
+Column Count: 7
+
+---------------- COLUMN DETAILS ----------------
+
+→ Column: injury_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 32495
+  Sample Values: [1, 2, 3, 4, 5]
+  Min: 1
+  Max: 37236
+  Avg: 18473.237051854132
+
+→ Column: player_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 3022
+  Sample Values: [3359, 3359, 3359, 3359, 322]
+  Min: 1
+  Max: 3822
+  Avg: 1688.1998153562085
+
+→ Column: injury_type
+  Type: text
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 323
+  Sample Values: ['unknown injury', 'unknown injury', 'unknown injury', 'unknown injury', 'Contracture']
+
+→ Column: injury_date
+  Type: date
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 4998
+  Sample Values: [datetime.date(2024, 2, 10), datetime.date(2023, 12, 21), datetime.date(2023, 3, 10), datetime.date(2022, 9, 9), datetime.date(2023, 11, 7)]
+  Min Date: 1999-08-09
+  Max Date: 2024-02-26
+
+→ Column: return_date
+  Type: date
+  Nullable: YES
+  Null Count: 149
+  Null %: 0.46%
+  Distinct Count: 4943
+  Sample Values: [datetime.date(2023, 12, 31), datetime.date(2023, 3, 18), datetime.date(2022, 9, 23), datetime.date(2023, 11, 20), datetime.date(2023, 11, 7)]
+  Min Date: 1999-11-01
+  Max Date: 2024-09-30
+
+→ Column: matches_missed
+  Type: integer
+  Nullable: YES
+  Null Count: 2320
+  Null %: 7.14%
+  Distinct Count: 105
+  Sample Values: [4, 1, 2, 4, 3]
+  Min: 1
+  Max: 191
+  Avg: 5.975277547638774
+
+→ Column: season
+  Type: text
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 25
+  Sample Values: ['23/24', '23/24', '22/23', '22/23', '23/24']
+
+--------------------------------------------
+END OF TABLE: injuries
+--------------------------------------------
+
+################################################################################
+TABLE: match_minute_snapshots
+################################################################################
+
+Row Count: 382326
+Column Count: 11
+
+---------------- COLUMN DETAILS ----------------
+
+→ Column: snapshot_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 382326
+  Sample Values: [1, 2, 3, 4, 5]
+  Min: 1
+  Max: 382326
+  Avg: 191163.5
+
+→ Column: match_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2053
+  Sample Values: [1, 1, 1, 1, 1]
+  Min: 1
+  Max: 2053
+  Avg: 1029.000088929343
+
+→ Column: team_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 152
+  Sample Values: [1, 1, 1, 1, 1]
+  Min: 1
+  Max: 152
+  Avg: 80.39785680283319
+
+→ Column: minute
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 129
+  Sample Values: [0, 1, 2, 3, 4]
+  Min: 0
+  Max: 128
+  Avg: 46.90214110471169
+
+→ Column: goals_so_far
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 11
+  Sample Values: [0, 0, 0, 0, 0]
+  Min: 0
+  Max: 10
+  Avg: 0.6049810894367634
+
+→ Column: xg_so_far
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 18062
+  Sample Values: [0.0, 0.0, 0.0, 0.0, 0.0]
+  Min: 0.0
+  Max: 6.9281
+  Avg: 0.5946529459152305
+
+→ Column: shots_so_far
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 38
+  Sample Values: [0, 0, 0, 0, 0]
+  Min: 0
+  Max: 37
+  Avg: 6.065849562938435
+
+→ Column: passes_so_far
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 1013
+  Sample Values: [20, 35, 51, 58, 63]
+  Min: 0
+  Max: 1157
+  Avg: 260.3315102818014
+
+→ Column: pass_acc_so_far
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 4753
+  Sample Values: [95.0, 91.43, 92.16, 89.66, 87.3]
+  Min: 0.0
+  Max: 100.0
+  Avg: 75.5776339825233
+
+→ Column: pressures_so_far
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 346
+  Sample Values: [0, 0, 1, 2, 4]
+  Min: 0
+  Max: 371
+  Avg: 85.27747785920916
+
+→ Column: red_cards_so_far
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 3
+  Sample Values: [0, 0, 0, 0, 0]
+  Min: 0
+  Max: 2
+  Avg: 0.003776881509497131
+
+--------------------------------------------
+END OF TABLE: match_minute_snapshots
+--------------------------------------------
+
+################################################################################
+TABLE: matches
+################################################################################
+
+Row Count: 2053
+Column Count: 10
+
+---------------- COLUMN DETAILS ----------------
+
+→ Column: match_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2053
+  Sample Values: [1, 2, 3, 4, 5]
+  Min: 1
+  Max: 2053
+  Avg: 1027.0
+
+→ Column: sb_match_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2053
+  Sample Values: [3890505, 3890515, 3890411, 3890282, 3890385]
+  Min: 7525
+  Max: 3943043
+  Avg: 3668751.402825134
+
+→ Column: match_date
+  Type: date
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 263
+  Sample Values: [datetime.date(2016, 4, 2), datetime.date(2016, 4, 9), datetime.date(2015, 12, 20), datetime.date(2015, 8, 29), datetime.date(2015, 12, 4)]
+  Min Date: 2015-08-07
+  Max Date: 2024-07-14
+
+→ Column: home_team_id
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 152
+  Sample Values: [1, 3, 5, 6, 8]
+  Min: 1
+  Max: 152
+  Avg: 80.3287871407696
+
+→ Column: away_team_id
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 152
+  Sample Values: [2, 4, 6, 7, 7]
+  Min: 1
+  Max: 152
+  Avg: 80.46517291768144
+
+→ Column: home_score
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 9
+  Sample Values: [1, 1, 2, 3, 3]
+  Min: 0
+  Max: 10
+  Avg: 1.5007306380905991
+
+→ Column: away_score
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 9
+  Sample Values: [0, 2, 0, 0, 1]
+  Min: 0
+  Max: 9
+  Avg: 1.1602532878714078
+
+→ Column: competition
+  Type: text
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 7
+  Sample Values: ['1. Bundesliga', '1. Bundesliga', '1. Bundesliga', '1. Bundesliga', '1. Bundesliga']
+
+→ Column: season
+  Type: text
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 5
+  Sample Values: ['2015/2016', '2015/2016', '2015/2016', '2015/2016', '2015/2016']
+
+→ Column: stadium_id
+  Type: integer
+  Nullable: YES
+  Null Count: 5
+  Null %: 0.24%
+  Distinct Count: 127
+  Sample Values: [1, 2, 3, 4, 5]
+  Min: 1
+  Max: 127
+  Avg: 64.51220703125
+
+--------------------------------------------
+END OF TABLE: matches
+--------------------------------------------
+
+################################################################################
+TABLE: pass_network_edges
+################################################################################
+
+Row Count: 442657
+Column Count: 10
+
+---------------- COLUMN DETAILS ----------------
+
+→ Column: edge_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 442657
+  Sample Values: [1, 2, 3, 4, 5]
+  Min: 1
+  Max: 442657
+  Avg: 221329.0
+
+→ Column: match_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2053
+  Sample Values: [1, 1, 1, 1, 1]
+  Min: 1
+  Max: 2053
+  Avg: 1031.8402148842106
+
+→ Column: team_id
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 152
+  Sample Values: [1, 1, 1, 1, 1]
+  Min: 1
+  Max: 152
+  Avg: 80.451270396718
+
+→ Column: passer_id
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 3782
+  Sample Values: [1, 2, 3, 4, 1]
+  Min: 1
+  Max: 3822
+  Avg: 1769.6379883295645
+
+→ Column: receiver_id
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 3798
+  Sample Values: [2, 3, 4, 1, 4]
+  Min: 1
+  Max: 3822
+  Avg: 1765.2714562290894
+
+→ Column: pass_count
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 56
+  Sample Values: [1, 6, 25, 3, 4]
+  Min: 1
+  Max: 69
+  Avg: 3.5211529468640506
+
+→ Column: avg_x_start
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 49654
+  Sample Values: [61.0, 56.800000000000004, 42.772, 62.9, 71.15]
+  Min: 0.1
+  Max: 120.0
+  Avg: 57.43029839383567
+
+→ Column: avg_y_start
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 49427
+  Sample Values: [40.1, 21.533333333333335, 32.42, 64.43333333333334, 61.449999999999996]
+  Min: 0.09999999999999999
+  Max: 80.0
+  Avg: 39.983637148728505
+
+→ Column: avg_x_end
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 51463
+  Sample Values: [60.6, 37.416666666666664, 50.516000000000005, 71.89999999999999, 62.35]
+  Min: 0.1
+  Max: 120.0
+  Avg: 62.219197976358885
+
+→ Column: avg_y_end
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 48618
+  Sample Values: [42.6, 29.000000000000004, 46.10799999999999, 56.833333333333336, 65.525]
+  Min: 0.1
+  Max: 80.0
+  Avg: 39.97943716572848
+
+--------------------------------------------
+END OF TABLE: pass_network_edges
+--------------------------------------------
+
+################################################################################
+TABLE: player_match_features
+################################################################################
+
+Row Count: 57450
+Column Count: 8
+
+---------------- COLUMN DETAILS ----------------
+
+→ Column: feature_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 57450
+  Sample Values: [5, 6, 53, 41, 21]
+  Min: 1
+  Max: 57450
+  Avg: 28725.5
+
+→ Column: stat_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 57450
+  Sample Values: [5, 6, 53, 41, 21]
+  Min: 1
+  Max: 57450
+  Avg: 28725.5
+
+→ Column: player_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 3822
+  Sample Values: [5, 6, 53, 41, 21]
+  Min: 1
+  Max: 3822
+  Avg: 1783.6063359442994
+
+→ Column: match_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2053
+  Sample Values: [1, 1, 2, 2, 1]
+  Min: 1
+  Max: 2053
+  Avg: 1030.4144647519581
+
+→ Column: matches_last_30_days
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 7
+  Sample Values: [0, 3, 1, 3, 1]
+  Min: 0
+  Max: 6
+  Avg: 2.4394952132288945
+
+→ Column: minutes_last_30_days
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 547
+  Sample Values: [0, 233, 92, 232, 53]
+  Min: 0
+  Max: 662
+  Avg: 217.10779808529156
+
+→ Column: days_since_last_injury
+  Type: integer
+  Nullable: YES
+  Null Count: 17783
+  Null %: 30.95%
+  Distinct Count: 2323
+  Sample Values: [156, 30, 47, 367, 114]
+  Min: 1
+  Max: 3171
+  Avg: 362.5878942193763
+
+→ Column: is_injured_next_30d
+  Type: boolean
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2
+  Sample Values: [False, False, False, False, False]
+
+--------------------------------------------
+END OF TABLE: player_match_features
+--------------------------------------------
+
+################################################################################
+TABLE: player_match_stats
+################################################################################
+
+Row Count: 57450
+Column Count: 27
+
+---------------- COLUMN DETAILS ----------------
+
+→ Column: stat_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 57450
+  Sample Values: [1, 2, 3, 4, 5]
+  Min: 1
+  Max: 57450
+  Avg: 28725.5
+
+→ Column: player_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 3822
+  Sample Values: [1, 2, 3, 4, 5]
+  Min: 1
+  Max: 3822
+  Avg: 1783.6063359442994
+
+→ Column: match_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2053
+  Sample Values: [1, 1, 1, 1, 1]
+  Min: 1
+  Max: 2053
+  Avg: 1030.4144647519581
+
+→ Column: team_id
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 152
+  Sample Values: [1, 1, 1, 1, 1]
+  Min: 1
+  Max: 152
+  Avg: 80.26626631853786
+
+→ Column: result
+  Type: text
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 3
+  Sample Values: ['win', 'win', 'win', 'win', 'win']
+
+→ Column: goals
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 6
+  Sample Values: [0, 0, 0, 0, 0]
+  Min: 0
+  Max: 5
+  Avg: 0.09338555265448216
+
+→ Column: assists
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 4
+  Sample Values: [0, 0, 0, 0, 0]
+  Min: 0
+  Max: 3
+  Avg: 0.06135770234986945
+
+→ Column: shots
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 15
+  Sample Values: [6, 0, 0, 0, 1]
+  Min: 0
+  Max: 14
+  Avg: 0.8972671888598781
+
+→ Column: xg
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 27066
+  Sample Values: [0.37704538000000004, 0.0, 0.0, 0.0, 0.31344244]
+  Min: 0.0
+  Max: 3.243018966
+  Avg: 0.09176262129079193
+
+→ Column: xa
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 22321
+  Sample Values: [0.022706099, 0.56165466, 0.0, 0.117235273, 0.0]
+  Min: 0.0
+  Max: 1.6309411299999999
+  Avg: 0.06034212001379438
+
+→ Column: key_passes
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 11
+  Sample Values: [1, 2, 0, 2, 0]
+  Min: 0
+  Max: 10
+  Avg: 0.6394778067885117
+
+→ Column: passes_attempted
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 166
+  Sample Values: [16, 74, 95, 103, 68]
+  Min: 0
+  Max: 220
+  Avg: 35.117789382071365
+
+→ Column: passes_completed
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 154
+  Sample Values: [12, 64, 92, 87, 59]
+  Min: 0
+  Max: 206
+  Avg: 27.13077458659704
+
+→ Column: pass_accuracy
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 1533
+  Sample Values: [75.0, 86.48648648648648, 96.84210526315789, 84.46601941747572, 86.76470588235294]
+  Min: 0.0
+  Max: 100.0
+  Avg: 73.86512553439174
+
+→ Column: progressive_passes
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 47
+  Sample Values: [0, 7, 3, 7, 4]
+  Min: 0
+  Max: 47
+  Avg: 4.5122541340295905
+
+→ Column: carry_distance
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 56633
+  Sample Values: [82.58234826336474, 395.2054911350021, 586.621289890919, 554.9493932356163, 257.91857625475274]
+  Min: 0.0
+  Max: 1258.505855727164
+  Avg: 157.71375187482755
+
+→ Column: progressive_carries
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 24
+  Sample Values: [0, 4, 5, 9, 2]
+  Min: 0
+  Max: 25
+  Avg: 2.222088772845953
+
+→ Column: dribbles_completed
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 15
+  Sample Values: [0, 0, 0, 1, 0]
+  Min: 0
+  Max: 15
+  Avg: 0.6591993037423847
+
+→ Column: tackles
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 14
+  Sample Values: [0, 1, 0, 1, 6]
+  Min: 0
+  Max: 13
+  Avg: 1.3666144473455177
+
+→ Column: interceptions
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 12
+  Sample Values: [0, 2, 0, 0, 1]
+  Min: 0
+  Max: 11
+  Avg: 0.8438468233246301
+
+→ Column: clearances
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 25
+  Sample Values: [0, 0, 2, 7, 1]
+  Min: 0
+  Max: 25
+  Avg: 1.6771453437771977
+
+→ Column: pressures
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 66
+  Sample Values: [8, 13, 6, 10, 10]
+  Min: 0
+  Max: 73
+  Avg: 11.604804177545692
+
+→ Column: yellow_cards
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 3
+  Sample Values: [1, 0, 0, 0, 0]
+  Min: 0
+  Max: 2
+  Avg: 0.02708442123585727
+
+→ Column: red_cards
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2
+  Sample Values: [0, 0, 0, 0, 0]
+  Min: 0
+  Max: 1
+  Avg: 0.0008877284595300261
+
+→ Column: minutes_played
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 123
+  Sample Values: [70, 94, 94, 94, 94]
+  Min: 2
+  Max: 128
+  Avg: 88.51810269799826
+
+→ Column: sub_minute
+  Type: integer
+  Nullable: YES
+  Null Count: 45087
+  Null %: 78.48%
+  Distinct Count: 116
+  Sample Values: [70, 57, 63, 47, 84]
+  Min: 2
+  Max: 120
+  Avg: 68.94564426110168
+
+→ Column: starting_position
+  Type: text
+  Nullable: YES
+  Null Count: 24
+  Null %: 0.04%
+  Distinct Count: 25
+  Sample Values: ['Center Forward', 'Left Center Midfield', 'Left Center Back', 'Right Back', 'Right Center Back']
+
+--------------------------------------------
+END OF TABLE: player_match_stats
+--------------------------------------------
+
+################################################################################
+TABLE: players
+################################################################################
+
+Row Count: 3822
+Column Count: 8
+
+---------------- COLUMN DETAILS ----------------
+
+→ Column: player_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 3822
+  Sample Values: [5, 6, 93, 120, 200]
+  Min: 1
+  Max: 3822
+  Avg: 1911.5
+
+→ Column: sb_player_id
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 3822
+  Sample Values: [9399, 20133, 3164, 6359, 400873]
+  Min: 2936
+  Max: 403392
+  Avg: 27960.068550497122
+
+→ Column: tm_player_id
+  Type: integer
+  Nullable: YES
+  Null Count: 420
+  Null %: 10.99%
+  Distinct Count: 3402
+  Sample Values: [10, 26, 215, 532, 568]
+  Min: 10
+  Max: 1510255
+  Avg: 210479.48206937095
+
+→ Column: player_name
+  Type: text
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 3822
+  Sample Values: ['Javier Martínez Aginaga', 'Xabier Alonso Olano', 'Marcelo Antônio Guedes Filho', 'Johan Danon Djourou-Gbadjere', 'Mustafa Batuhan Altıntaş']
+
+→ Column: norm_name
+  Type: text
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 3822
+  Sample Values: ['javier martinez aginaga', 'xabier alonso olano', 'marcelo antonio guedes filho', 'johan danon djourougbadjere', 'mustafa batuhan altntas']
+
+→ Column: nationality
+  Type: text
+  Nullable: YES
+  Null Count: 420
+  Null %: 10.99%
+  Distinct Count: 120
+  Sample Values: ['Germany', 'Germany', 'Paraguay', 'Peru', 'Austria']
+
+→ Column: position
+  Type: text
+  Nullable: YES
+  Null Count: 420
+  Null %: 10.99%
+  Distinct Count: 14
+  Sample Values: ['Centre-Forward', 'Goalkeeper', 'Centre-Forward', 'Centre-Forward', 'Centre-Back']
+
+→ Column: date_of_birth
+  Type: date
+  Nullable: YES
+  Null Count: 424
+  Null %: 11.09%
+  Distinct Count: 2669
+  Sample Values: [datetime.date(1978, 6, 9), datetime.date(1980, 8, 6), datetime.date(1981, 8, 16), datetime.date(1978, 10, 3), datetime.date(1980, 6, 16)]
+  Min Date: 1973-07-25
+  Max Date: 2006-03-16
+
+--------------------------------------------
+END OF TABLE: players
+--------------------------------------------
+
+################################################################################
+TABLE: shots
+################################################################################
+
+Row Count: 51548
+Column Count: 22
+
+---------------- COLUMN DETAILS ----------------
+
+→ Column: shot_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 51548
+  Sample Values: [1, 2, 3, 4, 5]
+  Min: 1
+  Max: 51548
+  Avg: 25774.5
+
+→ Column: sb_event_id
+  Type: text
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 51548
+  Sample Values: ['72596ffe-393e-4a75-82c6-5fb82ae36d4d', 'b2bae775-5dd8-45bf-9b84-191c7849f707', '7c4227e5-0759-4633-93ea-bbbe291bbd72', '8e3a6f10-64e4-49bf-a157-16b15b552713', '3a5364b3-0b99-4271-a451-0a3033ad195d']
+
+→ Column: match_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2053
+  Sample Values: [1206, 1206, 1206, 1206, 1206]
+  Min: 1
+  Max: 2053
+  Avg: 1039.251939939474
+
+→ Column: player_id
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2958
+  Sample Values: [2569, 2548, 2537, 2548, 2544]
+  Min: 1
+  Max: 3822
+  Avg: 1700.3652130053542
+
+→ Column: team_id
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 152
+  Sample Values: [106, 106, 103, 106, 103]
+  Min: 1
+  Max: 152
+  Avg: 80.72315123768138
+
+→ Column: minute
+  Type: integer
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 129
+  Sample Values: [1, 4, 9, 13, 25]
+  Min: 0
+  Max: 128
+  Avg: 49.11511600838054
+
+→ Column: x
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 576
+  Sample Values: [107.1, 113.7, 115.7, 113.9, 96.7]
+  Min: 35.4
+  Max: 120.4
+  Avg: 103.43647280204794
+
+→ Column: y
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 645
+  Sample Values: [26.6, 54.0, 50.5, 38.6, 47.2]
+  Min: 0.3
+  Max: 80.0
+  Avg: 39.794444013346876
+
+→ Column: distance
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 17305
+  Sample Values: [18.6, 15.352, 11.346, 6.259, 24.387]
+  Min: 0.632
+  Max: 88.833
+  Avg: 19.339152265849677
+
+→ Column: angle
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 8208
+  Sample Values: [0.3031, 0.2255, 0.2962, 1.1275, 0.3116]
+  Min: 0.0
+  Max: 3.1416
+  Avg: 0.43866002948707333
+
+→ Column: body_part
+  Type: text
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 4
+  Sample Values: ['Right Foot', 'Right Foot', 'Left Foot', 'Head', 'Right Foot']
+
+→ Column: shot_type
+  Type: text
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 4
+  Sample Values: ['Open Play', 'Open Play', 'Open Play', 'Open Play', 'Open Play']
+
+→ Column: technique
+  Type: text
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 7
+  Sample Values: ['Normal', 'Normal', 'Overhead Kick', 'Normal', 'Half Volley']
+
+→ Column: play_pattern
+  Type: text
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 9
+  Sample Values: ['Regular Play', 'Regular Play', 'Regular Play', 'From Throw In', 'From Free Kick']
+
+→ Column: under_pressure
+  Type: boolean
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2
+  Sample Values: [False, False, True, False, False]
+
+→ Column: first_time
+  Type: boolean
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2
+  Sample Values: [False, False, True, False, False]
+
+→ Column: defenders_in_cone
+  Type: integer
+  Nullable: YES
+  Null Count: 637
+  Null %: 1.24%
+  Distinct Count: 9
+  Sample Values: [1, 0, 0, 0, 1]
+  Min: 0
+  Max: 8
+  Avg: 0.7769244367621928
+
+→ Column: dist_to_nearest_def
+  Type: double precision
+  Nullable: YES
+  Null Count: 710
+  Null %: 1.38%
+  Distinct Count: 3065
+  Sample Values: [1.345, 1.844, 1.17, 1.655, 4.789]
+  Min: 0.0
+  Max: 34.73
+  Avg: 3.0695217357095164
+
+→ Column: gk_dist_to_goal
+  Type: double precision
+  Nullable: YES
+  Null Count: 673
+  Null %: 1.31%
+  Distinct Count: 3170
+  Sample Values: [4.061, 5.345, 3.94, 1.879, 3.421]
+  Min: 0.0
+  Max: 70.378
+  Avg: 3.4685780245700197
+
+→ Column: gk_dist_to_shot
+  Type: double precision
+  Nullable: YES
+  Null Count: 673
+  Null %: 1.31%
+  Distinct Count: 15880
+  Sample Values: [14.567, 10.065, 7.409, 5.308, 21.222]
+  Min: 0.361
+  Max: 74.031
+  Avg: 16.258808117936205
+
+→ Column: statsbomb_xg
+  Type: double precision
+  Nullable: YES
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 50701
+  Sample Values: [0.02083787, 0.034461774, 0.035480928, 0.38371146, 0.036740057]
+  Min: 0.00018
+  Max: 0.9951224
+  Avg: 0.10226900351431496
+
+→ Column: is_goal
+  Type: boolean
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 2
+  Sample Values: [False, False, False, False, False]
+
+--------------------------------------------
+END OF TABLE: shots
+--------------------------------------------
+
+################################################################################
+TABLE: stadiums
+################################################################################
+
+Row Count: 127
+Column Count: 2
+
+---------------- COLUMN DETAILS ----------------
+
+→ Column: stadium_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 127
+  Sample Values: [1, 2, 3, 4, 5]
+  Min: 1
+  Max: 127
+  Avg: 64.0
+
+→ Column: stadium_name
+  Type: text
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 127
+  Sample Values: ['Allianz Arena', 'Volksparkstadion', 'Olympiastadion Berlin', 'Mewa Arena', 'VELTINS-Arena']
+
+--------------------------------------------
+END OF TABLE: stadiums
+--------------------------------------------
+
+################################################################################
+TABLE: teams
+################################################################################
+
+Row Count: 152
+Column Count: 3
+
+---------------- COLUMN DETAILS ----------------
+
+→ Column: team_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 152
+  Sample Values: [1, 2, 3, 4, 5]
+  Min: 1
+  Max: 152
+  Avg: 76.5
+
+→ Column: team_name
+  Type: text
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 152
+  Sample Values: ['Bayern Munich', 'Eintracht Frankfurt', 'Hamburger SV', 'Darmstadt 98', 'Hertha Berlin']
+
+→ Column: sb_team_id
+  Type: integer
+  Nullable: NO
+  Null Count: 0
+  Null %: 0.00%
+  Distinct Count: 152
+  Sample Values: [169, 184, 171, 872, 173]
+  Min: 1
+  Max: 4885
+  Avg: 571.7631578947369
+
+--------------------------------------------
+END OF TABLE: teams
+--------------------------------------------
+
+DONE

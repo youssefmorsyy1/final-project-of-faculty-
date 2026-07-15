@@ -1,0 +1,17 @@
+[
+  "matches_last_30_days",
+  "age_at_match",
+  "matches_last_7_days",
+  "matches_last_14_days",
+  "consecutive_matches_played",
+  "days_rest_before_match",
+  "days_since_last_injury_capped",
+  "starts_last_5_matches",
+  "avg_minutes_last_5",
+  "max_minutes_last_5",
+  "consecutive_starts",
+  "recent_substitute_pattern",
+  "previous_injury_count",
+  "position_group",
+  "injury_recency_bucket"
+]

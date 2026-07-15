@@ -1,0 +1,363 @@
+{
+  "dropped_features": [
+    {
+      "dropped": "mean_out_centrality",
+      "kept": "mean_in_centrality",
+      "rho": 0.9998
+    },
+    {
+      "dropped": "total_passes",
+      "kept": "passes_per_player",
+      "rho": 0.9886
+    },
+    {
+      "dropped": "passes_per_player",
+      "kept": "weighted_density",
+      "rho": 0.9866
+    },
+    {
+      "dropped": "max_betweenness",
+      "kept": "centralization_index",
+      "rho": 0.985
+    },
+    {
+      "dropped": "pass_concentration_gini",
+      "kept": "pass_entropy",
+      "rho": 0.977
+    },
+    {
+      "dropped": "pass_per_edge",
+      "kept": "weighted_density",
+      "rho": 0.9518
+    },
+    {
+      "dropped": "top_3_edge_share",
+      "kept": "max_edge_share",
+      "rho": 0.9232
+    },
+    {
+      "dropped": "max_pagerank",
+      "kept": "hub_dominance",
+      "rho": 0.919
+    },
+    {
+      "dropped": "n_edges",
+      "kept": "edges_per_player",
+      "rho": 0.9146
+    },
+    {
+      "dropped": "mean_in_centrality",
+      "kept": "network_density",
+      "rho": 0.9129
+    }
+  ],
+  "postmatch_features": [
+    "network_density",
+    "clustering_coefficient",
+    "mean_betweenness",
+    "mean_pagerank",
+    "n_nodes",
+    "pass_entropy",
+    "max_edge_share",
+    "hub_dominance",
+    "reciprocity",
+    "weighted_density",
+    "edges_per_player",
+    "centralization_index",
+    "largest_component_ratio",
+    "modularity",
+    "team_xg",
+    "team_xga",
+    "is_home",
+    "opponent_quality"
+  ],
+  "model_comparison": [
+    {
+      "feature_set": "baseline",
+      "model": "DummyMean",
+      "r2_mean": -0.0006510359664849919,
+      "r2_std": 0.0005041171907886124,
+      "mae_mean": 0.9826110976013045,
+      "mae_std": 0.016250018126171092,
+      "rmse_mean": 1.235018713185692,
+      "rmse_std": 0.029216402430520868
+    },
+    {
+      "feature_set": "graph_only",
+      "model": "Ridge",
+      "r2_mean": 0.04566468655919642,
+      "r2_std": 0.013277042600939096,
+      "mae_mean": 0.9506390089685631,
+      "mae_std": 0.013758350885243966,
+      "rmse_mean": 1.205927073944491,
+      "rmse_std": 0.02325132720451836
+    },
+    {
+      "feature_set": "graph_only",
+      "model": "ElasticNet",
+      "r2_mean": -0.0006510359664849919,
+      "r2_std": 0.0005041171907886124,
+      "mae_mean": 0.9826110976013045,
+      "mae_std": 0.016250018126171092,
+      "rmse_mean": 1.235018713185692,
+      "rmse_std": 0.029216402430520868
+    },
+    {
+      "feature_set": "graph_only",
+      "model": "RandomForest",
+      "r2_mean": -0.004539003149366461,
+      "r2_std": 0.023449915383106704,
+      "mae_mean": 0.973719844519613,
+      "mae_std": 0.011828974124267914,
+      "rmse_mean": 1.2371016848055836,
+      "rmse_std": 0.022294200710385653
+    },
+    {
+      "feature_set": "graph_only",
+      "model": "ExtraTrees",
+      "r2_mean": -0.0035488084940075828,
+      "r2_std": 0.028835093355019645,
+      "mae_mean": 0.9705476410895496,
+      "mae_std": 0.012358338366121664,
+      "rmse_mean": 1.2363138946624819,
+      "rmse_std": 0.01637898939857426
+    },
+    {
+      "feature_set": "graph_only",
+      "model": "GBR",
+      "r2_mean": 0.024811167672631605,
+      "r2_std": 0.020868025460056384,
+      "mae_mean": 0.9549006292822384,
+      "mae_std": 0.022581266681828208,
+      "rmse_mean": 1.2192104324922854,
+      "rmse_std": 0.034588894423589256
+    },
+    {
+      "feature_set": "graph_only",
+      "model": "HistGBR",
+      "r2_mean": -0.018370060634875694,
+      "r2_std": 0.021131805619249256,
+      "mae_mean": 0.9768546348706357,
+      "mae_std": 0.013484418892849034,
+      "rmse_mean": 1.2455520442020511,
+      "rmse_std": 0.01794949905806449
+    },
+    {
+      "feature_set": "graph_only",
+      "model": "XGB",
+      "r2_mean": -0.15332090162500728,
+      "r2_std": 0.040373488506357136,
+      "mae_mean": 1.0412120044218747,
+      "mae_std": 0.012910608463724015,
+      "rmse_mean": 1.3252386828575757,
+      "rmse_std": 0.017878986173022752
+    },
+    {
+      "feature_set": "context_only",
+      "model": "Ridge",
+      "r2_mean": 0.30979943464203963,
+      "r2_std": 0.01738576578591625,
+      "mae_mean": 0.7988353033395662,
+      "mae_std": 0.0200689558019464,
+      "rmse_mean": 1.0257603416841659,
+      "rmse_std": 0.03212801533444794
+    },
+    {
+      "feature_set": "context_only",
+      "model": "ElasticNet",
+      "r2_mean": 0.09271910897380972,
+      "r2_std": 0.004837058900057838,
+      "mae_mean": 0.934814723306016,
+      "mae_std": 0.017337089860274418,
+      "rmse_mean": 1.1760434603942258,
+      "rmse_std": 0.030350979964927992
+    },
+    {
+      "feature_set": "context_only",
+      "model": "RandomForest",
+      "r2_mean": 0.26982594342930355,
+      "r2_std": 0.011276083362449294,
+      "mae_mean": 0.8238544596759836,
+      "mae_std": 0.02041808352392949,
+      "rmse_mean": 1.0551159512824881,
+      "rmse_std": 0.03218801110846816
+    },
+    {
+      "feature_set": "context_only",
+      "model": "ExtraTrees",
+      "r2_mean": 0.22443595474652192,
+      "r2_std": 0.017300116424642856,
+      "mae_mean": 0.8464248531244436,
+      "mae_std": 0.024948044569714174,
+      "rmse_mean": 1.0874648713763264,
+      "rmse_std": 0.036970499258059036
+    },
+    {
+      "feature_set": "context_only",
+      "model": "GBR",
+      "r2_mean": 0.325347664580984,
+      "r2_std": 0.012161326026146396,
+      "mae_mean": 0.788020044342743,
+      "mae_std": 0.017525141089015393,
+      "rmse_mean": 1.014210208310736,
+      "rmse_std": 0.03172547402490247
+    },
+    {
+      "feature_set": "context_only",
+      "model": "HistGBR",
+      "r2_mean": 0.29515970801110764,
+      "r2_std": 0.012761342427980655,
+      "mae_mean": 0.8077743261432593,
+      "mae_std": 0.017756877987055077,
+      "rmse_mean": 1.0364542950573685,
+      "rmse_std": 0.025495132423941774
+    },
+    {
+      "feature_set": "context_only",
+      "model": "XGB",
+      "r2_mean": 0.1976699424812255,
+      "r2_std": 0.014332328927658736,
+      "mae_mean": 0.8581860030467012,
+      "mae_std": 0.016093901898704414,
+      "rmse_mean": 1.105842884202517,
+      "rmse_std": 0.028307125155083587
+    },
+    {
+      "feature_set": "postmatch_full",
+      "model": "Ridge",
+      "r2_mean": 0.32116648780608964,
+      "r2_std": 0.013929573754017502,
+      "mae_mean": 0.7923499429481355,
+      "mae_std": 0.01604717296113781,
+      "rmse_mean": 1.017177978508109,
+      "rmse_std": 0.02656222493304346
+    },
+    {
+      "feature_set": "postmatch_full",
+      "model": "ElasticNet",
+      "r2_mean": 0.09271910897380972,
+      "r2_std": 0.004837058900057838,
+      "mae_mean": 0.934814723306016,
+      "mae_std": 0.017337089860274418,
+      "rmse_mean": 1.1760434603942258,
+      "rmse_std": 0.030350979964927992
+    },
+    {
+      "feature_set": "postmatch_full",
+      "model": "RandomForest",
+      "r2_mean": 0.32659090786094647,
+      "r2_std": 0.016165100171870297,
+      "mae_mean": 0.7964151682392737,
+      "mae_std": 0.014758845221775715,
+      "rmse_mean": 1.0131912503231468,
+      "rmse_std": 0.030860388362854548
+    },
+    {
+      "feature_set": "postmatch_full",
+      "model": "ExtraTrees",
+      "r2_mean": 0.3306639875180294,
+      "r2_std": 0.019812814021868737,
+      "mae_mean": 0.7887823215239451,
+      "mae_std": 0.016428152008852143,
+      "rmse_mean": 1.0100738788019181,
+      "rmse_std": 0.03181608382114432
+    },
+    {
+      "feature_set": "postmatch_full",
+      "model": "GBR",
+      "r2_mean": 0.33464165625243386,
+      "r2_std": 0.01005054897539058,
+      "mae_mean": 0.7869470974662316,
+      "mae_std": 0.015180839604906265,
+      "rmse_mean": 1.0070958259979332,
+      "rmse_std": 0.02690987664867538
+    },
+    {
+      "feature_set": "postmatch_full",
+      "model": "HistGBR",
+      "r2_mean": 0.3155386037930223,
+      "r2_std": 0.011460047885004338,
+      "mae_mean": 0.7972570959453146,
+      "mae_std": 0.009157485854674956,
+      "rmse_mean": 1.0212643098134637,
+      "rmse_std": 0.02001460449154229
+    },
+    {
+      "feature_set": "postmatch_full",
+      "model": "XGB",
+      "r2_mean": 0.21524288122761842,
+      "r2_std": 0.023219184484620622,
+      "mae_mean": 0.8552660514300525,
+      "mae_std": 0.016445474686395362,
+      "rmse_mean": 1.0935950843666964,
+      "rmse_std": 0.030634235106878748
+    }
+  ],
+  "best_model": {
+    "model": "ExtraTrees",
+    "r2_cv": 0.3528,
+    "params": {
+      "max_depth": 9,
+      "min_samples_leaf": 7,
+      "n_estimators": 221
+    },
+    "holdout_2022_r2": 0.29513992139149814,
+    "loso": [
+      {
+        "season": "2015/2016",
+        "n_test": 3646,
+        "r2": 0.2639392703222877,
+        "mae": 0.8255304186403908,
+        "rmse": 1.063910595235445
+      },
+      {
+        "season": "2018",
+        "n_test": 128,
+        "r2": 0.14700905153409194,
+        "mae": 0.8427443180286566,
+        "rmse": 1.063951851364691
+      },
+      {
+        "season": "2020",
+        "n_test": 102,
+        "r2": 0.22799636145944502,
+        "mae": 0.8661935240367138,
+        "rmse": 1.073690494153814
+      },
+      {
+        "season": "2022",
+        "n_test": 128,
+        "r2": 0.29513992139149814,
+        "mae": 0.8645398687017526,
+        "rmse": 1.1226532832825131
+      },
+      {
+        "season": "2024",
+        "n_test": 102,
+        "r2": 0.08164553492289373,
+        "mae": 0.7546932147900406,
+        "rmse": 0.9620313319101627
+      }
+    ],
+    "permutation_importance": {
+      "team_xg": 0.7437,
+      "is_home": 0.0369,
+      "team_xga": 0.0258,
+      "weighted_density": 0.0248,
+      "edges_per_player": 0.0225,
+      "network_density": 0.019,
+      "opponent_quality": 0.0158,
+      "reciprocity": 0.0156,
+      "modularity": 0.0118,
+      "clustering_coefficient": 0.0116,
+      "n_nodes": 0.0104,
+      "mean_pagerank": 0.0091,
+      "mean_betweenness": 0.0081,
+      "hub_dominance": 0.0078,
+      "pass_entropy": 0.0075,
+      "max_edge_share": 0.0073,
+      "centralization_index": 0.007,
+      "largest_component_ratio": 0.0
+    }
+  }
+}

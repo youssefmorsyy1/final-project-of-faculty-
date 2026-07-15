@@ -1,0 +1,18 @@
+[
+  "minutes_played",
+  "matches_last_30_days",
+  "age_at_match",
+  "sub_minute_flag",
+  "xg",
+  "xa",
+  "pressures",
+  "tackles",
+  "carry_distance",
+  "interceptions",
+  "clearances",
+  "matches_last_7_days",
+  "matches_last_14_days",
+  "consecutive_matches_played",
+  "days_rest_before_match",
+  "days_since_last_injury_capped"
+]

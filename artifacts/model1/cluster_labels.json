@@ -1,0 +1,22 @@
+{
+  "spatial": {
+    "4": "Goalkeeper",
+    "0": "Defensive Midfielder",
+    "8": "Advanced Midfielder",
+    "1": "Left Center Back",
+    "7": "Right Center Back",
+    "3": "Left Attacker",
+    "6": "Right Attacker",
+    "5": "Left Wide Defender",
+    "2": "Right Wide Defender"
+  },
+  "style": {
+    "3": "Pure Striker",
+    "4": "Defensive Mid",
+    "6": "All-Rounder",
+    "0": "Deep Playmaker",
+    "1": "Chance Creator",
+    "2": "Clinical Finisher",
+    "5": "Carrier"
+  }
+}

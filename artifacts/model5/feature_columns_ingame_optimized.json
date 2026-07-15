@@ -1,0 +1,22 @@
+[
+  "minute",
+  "goals_so_far",
+  "xg_so_far",
+  "shots_so_far",
+  "pass_acc_so_far",
+  "pressures_so_far",
+  "red_cards_so_far",
+  "goal_diff_so_far",
+  "xg_diff_so_far",
+  "is_home",
+  "avg_xg_last5",
+  "avg_pass_acc_last5",
+  "opp_red_cards_so_far",
+  "red_card_diff_so_far",
+  "avg_xg_last3",
+  "season_points_per_game",
+  "opp_season_points_per_game",
+  "elo_pre",
+  "opp_elo_pre",
+  "elo_diff"
+]

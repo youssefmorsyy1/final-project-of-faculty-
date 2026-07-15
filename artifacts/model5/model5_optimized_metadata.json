@@ -1,0 +1,81 @@
+{
+  "pre_match": {
+    "winner_algorithm": "RandomForest",
+    "best_params": {
+      "clf__max_depth": 20,
+      "clf__max_features": null,
+      "clf__min_samples_leaf": 11,
+      "clf__n_estimators": 187
+    },
+    "tuned_cv_accuracy": 0.47565960477123015,
+    "holdout_2022_accuracy": 0.6015625,
+    "holdout_2022_f1_macro": 0.5654346720060396,
+    "naive_majority_accuracy": 0.3709206039941549,
+    "n_rows": 4106,
+    "features": [
+      "avg_xg_last5",
+      "avg_shots_last5",
+      "avg_passes_last5",
+      "avg_pass_acc_last5",
+      "avg_tackles_last5",
+      "avg_pressures_last5",
+      "red_cards_match",
+      "subs_made",
+      "is_home",
+      "avg_xg_last3",
+      "goal_diff_last5",
+      "points_last3",
+      "season_points_per_game",
+      "opp_season_points_per_game",
+      "avg_xg_last5_opp",
+      "avg_shots_last5_opp",
+      "avg_passes_last5_opp",
+      "avg_pass_acc_last5_opp",
+      "avg_tackles_last5_opp",
+      "avg_pressures_last5_opp",
+      "avg_xg_last3_opp",
+      "goal_diff_last5_opp",
+      "points_last3_opp",
+      "elo_pre",
+      "opp_elo_pre",
+      "elo_diff"
+    ]
+  },
+  "in_game": {
+    "winner_algorithm": "GradientBoosting",
+    "best_params": {
+      "clf__learning_rate": 0.02235980266720311,
+      "clf__max_depth": 5,
+      "clf__min_samples_leaf": 29,
+      "clf__n_estimators": 159,
+      "clf__subsample": 0.8253152871382157
+    },
+    "tuned_cv_accuracy": 0.6638310171741809,
+    "holdout_2022_accuracy": 0.6764,
+    "holdout_2022_f1_macro": 0.6586759603298038,
+    "naive_majority_accuracy": 0.36986567783424956,
+    "n_rows": 77128,
+    "features": [
+      "minute",
+      "goals_so_far",
+      "xg_so_far",
+      "shots_so_far",
+      "pass_acc_so_far",
+      "pressures_so_far",
+      "red_cards_so_far",
+      "goal_diff_so_far",
+      "xg_diff_so_far",
+      "is_home",
+      "avg_xg_last5",
+      "avg_pass_acc_last5",
+      "opp_red_cards_so_far",
+      "red_card_diff_so_far",
+      "avg_xg_last3",
+      "season_points_per_game",
+      "opp_season_points_per_game",
+      "elo_pre",
+      "opp_elo_pre",
+      "elo_diff"
+    ]
+  }
+}

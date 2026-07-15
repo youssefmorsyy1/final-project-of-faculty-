@@ -1,0 +1,125 @@
+
+==============================================================================
+  MODEL 3 OPTIMIZED -- INJURY RISK (workload/recovery features)
+==============================================================================
+Player-match rows: 57,450  |  positive rate: 10.19%
+Distinct players: 3,822
+Seasons: ['2015/2016', '2018', '2020', '2022', '2024']
+
+==============================================================================
+  1. MULTICOLLINEARITY AUDIT (20 candidate features)
+==============================================================================
+Multicollinearity audit (|Spearman rho| > 0.90 triggers a drop):
+  DROP days_since_last_injury   (rho=0.976 vs kept feature days_since_last_injury_capped)
+  DROP minutes_last_30_days     (rho=0.975 vs kept feature matches_last_30_days)
+  DROP minutes_last_14_days     (rho=0.951 vs kept feature matches_last_14_days)
+  DROP minutes_last_7_days      (rho=0.923 vs kept feature matches_last_7_days)
+Kept 16/20 features.
+
+Final feature set (16):
+  minutes_played
+  matches_last_30_days
+  age_at_match
+  sub_minute_flag
+  xg
+  xa
+  pressures
+  tackles
+  carry_distance
+  interceptions
+  clearances
+  matches_last_7_days
+  matches_last_14_days
+  consecutive_matches_played
+  days_rest_before_match
+  days_since_last_injury_capped
+
+==============================================================================
+  2. IMBALANCE-HANDLING ABLATION (RandomForest, StratifiedGroupKFold by player)
+==============================================================================
+  raw            AUC-ROC=0.7111+/-0.0159  AUC-PR=0.2322+/-0.0070
+  class_weight   AUC-ROC=0.7114+/-0.0185  AUC-PR=0.2295+/-0.0097
+  smote          AUC-ROC=0.6943+/-0.0164  AUC-PR=0.1858+/-0.0080
+
+  Best strategy by AUC-PR: raw
+  SMOTE is applied uniformly below regardless (matches the spec's explicit
+  request and works identically across every algorithm in the registry,
+  unlike class_weight which only some support) -- compare against the
+  ablation above to see whether it earns its keep on this data.
+
+==============================================================================
+  3. MODEL COMPARISON -- BASELINE (UNTUNED), StratifiedGroupKFold(5) BY PLAYER
+==============================================================================
+  LogisticRegression     AUC-ROC=0.5847+/-0.0015  AUC-PR=0.1574+/-0.0040
+  RandomForest           AUC-ROC=0.6774+/-0.0134  AUC-PR=0.1894+/-0.0083
+  ExtraTrees             AUC-ROC=0.6819+/-0.0147  AUC-PR=0.1951+/-0.0099
+  GradientBoosting       AUC-ROC=0.7001+/-0.0139  AUC-PR=0.2127+/-0.0071
+  HistGradientBoosting   AUC-ROC=0.7014+/-0.0172  AUC-PR=0.2170+/-0.0117
+  XGB                    AUC-ROC=0.6806+/-0.0101  AUC-PR=0.2004+/-0.0074
+
+==============================================================================
+  4. HYPERPARAMETER TUNING -- RandomizedSearchCV(n_iter=20), StratifiedGroupKFold(5)
+==============================================================================
+
+Tuning candidates (top-2 baseline by AUC-PR): ['HistGradientBoosting', 'GradientBoosting']
+  HistGradientBoosting   tuned AUC-PR=0.2185  params={'l2_regularization': np.float64(0.7004349545230062), 'learning_rate': np.float64(0.14695524321624376), 'max_iter': 222, 'max_leaf_nodes': 12, 'min_samples_leaf': 32}
+  GradientBoosting       tuned AUC-PR=0.2173  params={'learning_rate': np.float64(0.13826083091896751), 'max_depth': 4, 'min_samples_leaf': 11, 'n_estimators': 180, 'subsample': np.float64(0.88453678109946)}
+  -> BEST: HistGradientBoosting  AUC-PR=0.2185
+
+==============================================================================
+  5. OUT-OF-TIME GENERALISATION -- held-out 2022 + leave-one-season-out
+==============================================================================
+
+Held-out 2022 (n=1996): AUC-ROC=0.6618236237306254  AUC-PR=0.13645400477691633
+  season=2015/2016    n=50503 n_pos=5500 AUC-ROC=0.6502  AUC-PR=0.1838
+  season=2018         n=1787  n_pos=114  AUC-ROC=0.6599  AUC-PR=0.1258
+  season=2020         n=1572  n_pos=115  AUC-ROC=0.5946  AUC-PR=0.1294
+  season=2022         n=1996  n_pos=125  AUC-ROC=0.6618  AUC-PR=0.1365
+  season=2024         SKIPPED (n_test=1592, n_pos=0)
+
+==============================================================================
+  6. FINAL ARTIFACTS, FEATURE IMPORTANCE & PERMUTATION IMPORTANCE
+==============================================================================
+
+Final model: HistGradientBoosting  (saved histgradientboosting_optimized.pkl, scaler_optimized.pkl, feature_columns_optimized.json)
+Trained on SMOTE-resampled data; scaler.transform() + model.predict_proba()
+at inference time never sees synthetic rows -- SMOTE only ever touches training.
+  No native importance API on HistGradientBoosting -- using permutation
+  importance (below) as the feature ranking too.
+  Permutation importance (in-sample AUC-PR drop -- diagnostic, not held-out):
+    +0.0156  minutes_played
+    +0.0129  clearances
+    +0.0117  days_since_last_injury_capped
+    +0.0113  age_at_match
+    +0.0083  interceptions
+    +0.0077  consecutive_matches_played
+    +0.0077  tackles
+    +0.0059  days_rest_before_match
+    +0.0042  matches_last_30_days
+    +0.0021  pressures
+    +0.0014  carry_distance
+    +0.0013  xg
+    +0.0009  xa
+    +0.0008  matches_last_14_days
+    +0.0002  matches_last_7_days
+    +0.0001  sub_minute_flag
+
+==============================================================================
+  7. LIMITATIONS / LEAKAGE NOTES
+==============================================================================
+- consecutive_matches_played and the rolling 7/14-day windows are computed
+  from matches strictly BEFORE the current one, matching the existing
+  matches_last_30_days convention -- no same-match leakage.
+- This is still a same-match model: minutes_played, xg, xa, pressures etc.
+  for THIS match are used as features (same framing as the original model),
+  it is not a pure pre-match forecast.
+- consecutive_matches_played is bounded by what's IN this StatsBomb subset,
+  not a player's true career fixture list -- the GAP_RESET_DAYS=45 cutoff
+  limits but doesn't eliminate this; treat it as directional.
+- 2015/16 league season dominates the row count; leave-one-season-out
+  results on the small seasons are directional, not precise.
+- Permutation importance above is computed on the same (SMOTE-resampled)
+  data the final model was fit on (in-sample) -- it shows what the model
+  leans on, not an unbiased held-out estimate.
+- Existing artifacts (xgb.pkl, rf.pkl, lr.pkl, scaler.pkl, features.parquet)
+  and api_server.py are byte-for-byte untouched by this pipeline.

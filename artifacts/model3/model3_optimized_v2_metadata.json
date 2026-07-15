@@ -1,0 +1,231 @@
+{
+  "mode_name": "prematch",
+  "kept_features": [
+    "matches_last_30_days",
+    "age_at_match",
+    "matches_last_7_days",
+    "matches_last_14_days",
+    "consecutive_matches_played",
+    "days_rest_before_match",
+    "days_since_last_injury_capped",
+    "starts_last_5_matches",
+    "avg_minutes_last_5",
+    "max_minutes_last_5",
+    "consecutive_starts",
+    "recent_substitute_pattern",
+    "previous_injury_count",
+    "position_group",
+    "injury_recency_bucket"
+  ],
+  "dropped": [
+    {
+      "dropped": "age_squared",
+      "kept": "age_at_match",
+      "rho": 1.0
+    },
+    {
+      "dropped": "full_90s_last_5_matches",
+      "kept": "starts_last_5_matches",
+      "rho": 0.9922
+    },
+    {
+      "dropped": "days_since_last_injury",
+      "kept": "days_since_last_injury_capped",
+      "rho": 0.9762
+    },
+    {
+      "dropped": "minutes_last_30_days",
+      "kept": "matches_last_30_days",
+      "rho": 0.975
+    },
+    {
+      "dropped": "minutes_last_14_days",
+      "kept": "matches_last_14_days",
+      "rho": 0.9506
+    },
+    {
+      "dropped": "minutes_last_7_days",
+      "kept": "matches_last_7_days",
+      "rho": 0.9228
+    },
+    {
+      "dropped": "fixture_congestion_score",
+      "kept": "matches_last_14_days",
+      "rho": 0.9223
+    }
+  ],
+  "ablation": {
+    "raw": {
+      "roc_auc_mean": 0.7125527297284477,
+      "roc_auc_std": 0.016543053823113094,
+      "pr_auc_mean": 0.21773288830616547,
+      "pr_auc_std": 0.00940143688947784
+    },
+    "class_weight": {
+      "roc_auc_mean": 0.7104563434640369,
+      "roc_auc_std": 0.016657394144266126,
+      "pr_auc_mean": 0.21775990187875624,
+      "pr_auc_std": 0.01026530931167243
+    },
+    "smote": {
+      "roc_auc_mean": 0.7024765078210005,
+      "roc_auc_std": 0.017286049709091943,
+      "pr_auc_mean": 0.19800929277143156,
+      "pr_auc_std": 0.01140321588991909
+    },
+    "smoteenn": {
+      "roc_auc_mean": 0.7057630244753902,
+      "roc_auc_std": 0.01737091304623642,
+      "pr_auc_mean": 0.20538957418897774,
+      "pr_auc_std": 0.011856666462290612
+    },
+    "random_undersample": {
+      "roc_auc_mean": 0.7107863022393234,
+      "roc_auc_std": 0.01812234438248481,
+      "pr_auc_mean": 0.21458145837958686,
+      "pr_auc_std": 0.010737411188596476
+    }
+  },
+  "best_strategy": "class_weight",
+  "comparison_rows": [
+    {
+      "model": "Baseline(prior)",
+      "roc_auc_mean": 0.5,
+      "roc_auc_std": 0.0,
+      "pr_auc_mean": 0.10189721536966985,
+      "pr_auc_std": 0.00017874821104430348
+    },
+    {
+      "model": "LogisticRegression",
+      "roc_auc_mean": 0.6973863531518484,
+      "roc_auc_std": 0.017334767183911283,
+      "pr_auc_mean": 0.20660833692722957,
+      "pr_auc_std": 0.008773654054283425
+    },
+    {
+      "model": "RandomForest",
+      "roc_auc_mean": 0.6696834771256037,
+      "roc_auc_std": 0.011437224367569616,
+      "pr_auc_mean": 0.1669442836428591,
+      "pr_auc_std": 0.007366519195475278
+    },
+    {
+      "model": "ExtraTrees",
+      "roc_auc_mean": 0.650470376649533,
+      "roc_auc_std": 0.01238250725243613,
+      "pr_auc_mean": 0.1520585724779766,
+      "pr_auc_std": 0.007412813938114309
+    },
+    {
+      "model": "GradientBoosting",
+      "roc_auc_mean": 0.7156617301942159,
+      "roc_auc_std": 0.018048874542627224,
+      "pr_auc_mean": 0.22131809267359176,
+      "pr_auc_std": 0.012915835832844124
+    },
+    {
+      "model": "HistGradientBoosting",
+      "roc_auc_mean": 0.7007852354175529,
+      "roc_auc_std": 0.017234007149490912,
+      "pr_auc_mean": 0.21072406966237828,
+      "pr_auc_std": 0.005728992794743792
+    },
+    {
+      "model": "XGB",
+      "roc_auc_mean": 0.6715701000601035,
+      "roc_auc_std": 0.01880718768805872,
+      "pr_auc_mean": 0.17945411533980932,
+      "pr_auc_std": 0.010000464205363862
+    },
+    {
+      "model": "BalancedRandomForest",
+      "roc_auc_mean": 0.6901134568116823,
+      "roc_auc_std": 0.01168022701691053,
+      "pr_auc_mean": 0.1887325988887175,
+      "pr_auc_std": 0.007621430545767673
+    }
+  ],
+  "best_meta": {
+    "model": "GradientBoosting",
+    "pr_auc_cv": 0.2243,
+    "params": {
+      "learning_rate": 0.08012737503998542,
+      "max_depth": 3,
+      "min_samples_leaf": 28,
+      "n_estimators": 114,
+      "subsample": 0.7824279936868144
+    },
+    "imbalance_strategy": "class_weight",
+    "holdout_2022_roc_auc": 0.6779861036878675,
+    "holdout_2022_pr_auc": 0.10752275909490966,
+    "loso": [
+      {
+        "season": "2015/2016",
+        "n_test": 50503,
+        "n_pos": 5500,
+        "roc_auc": 0.6406868168384734,
+        "pr_auc": 0.1611506929655572
+      },
+      {
+        "season": "2018",
+        "n_test": 1787,
+        "n_pos": 114,
+        "roc_auc": 0.6112640387579829,
+        "pr_auc": 0.08195098283159602
+      },
+      {
+        "season": "2020",
+        "n_test": 1572,
+        "n_pos": 115,
+        "roc_auc": 0.5828444391393871,
+        "pr_auc": 0.13389754093297124
+      },
+      {
+        "season": "2022",
+        "n_test": 1996,
+        "n_pos": 125,
+        "roc_auc": 0.6779861036878675,
+        "pr_auc": 0.10752275909490966
+      },
+      {
+        "season": "2024",
+        "n_test": 1592,
+        "n_pos": 0,
+        "skipped": true
+      }
+    ],
+    "brier_uncalibrated": 0.08608470500136643,
+    "brier_calibrated": 0.08612413797281565,
+    "used_calibration": false,
+    "recall_at_precision_50": 0.00017082336863682952,
+    "precision_at_recall_50": 0.20280585929440892,
+    "risk_tiers": {
+      "Low": {
+        "score_low": 0.009760911774041781,
+        "score_high": 0.08834239270619501,
+        "n": 28725,
+        "observed_injury_rate": 0.047867711053089644
+      },
+      "Medium": {
+        "score_low": 0.08834239270619501,
+        "score_high": 0.14926229847162625,
+        "n": 17235,
+        "observed_injury_rate": 0.11337394836089353
+      },
+      "High": {
+        "score_low": 0.14926229847162625,
+        "score_high": 0.24905626049699656,
+        "n": 8617,
+        "observed_injury_rate": 0.18486712312869907
+      },
+      "Very High": {
+        "score_low": 0.24905626049699656,
+        "score_high": 0.718105899911398,
+        "n": 2873,
+        "observed_injury_rate": 0.32439958231813437
+      }
+    }
+  },
+  "positive_rate": 0.10189730200174064,
+  "n_rows": 57450
+}

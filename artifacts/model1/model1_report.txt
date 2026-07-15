@@ -1,0 +1,84 @@
+=================================================================
+MODEL 1 — DUAL-AXIS PLAYER CLUSTERING  v4.0
+=================================================================
+
+Rows loaded : 3,854  |  Players: 3,072
+GKs         : 268  |  Outfield: 3,586
+
+── Spatial clustering ──────────────────────────────────────
+  K = 9  |  sil=0.4836  db=0.6545  ch=5635.9
+  Zone assignments:
+    0: Defensive Midfielder         n=  752  centroid=(59.3,39.8)
+    1: Left Attacker                n=  376  centroid=(72.8,26.0)
+    2: Right Wide Defender          n=  326  centroid=(61.5,68.6)
+    3: Goalkeeper                   n=  268  centroid=(12.2,40.7)
+    4: Advanced Midfielder          n=  799  centroid=(74.1,40.5)
+    5: Left Center Back             n=  296  centroid=(43.5,27.0)
+    6: Left Wide Defender           n=  347  centroid=(61.7,10.7)
+    7: Right Center Back            n=  353  centroid=(43.8,51.7)
+    8: Right Attacker               n=  337  centroid=(72.9,55.7)
+
+── Spatial external validation (vs StatsBomb modal_position) ───────
+  n evaluated              : 3,854
+  Adjusted Rand Index      : 0.4007
+  Normalized Mutual Info   : 0.5235
+  L/R side-accuracy        : 0.9644  (n=1,880)
+  Per-zone purity:
+    Advanced Midfielder     n= 799  top='Center Forward' (38%)
+    Defensive Midfielder    n= 752  top='Left Defensive Midfield' (21%)
+    Goalkeeper              n= 268  top='Goalkeeper' (100%)
+    Left Attacker           n= 376  top='Left Wing' (36%)
+    Left Center Back        n= 296  top='Left Center Back' (90%)
+    Left Wide Defender      n= 347  top='Left Back' (75%)
+    Right Attacker          n= 337  top='Right Wing' (37%)
+    Right Center Back       n= 353  top='Right Center Back' (80%)
+    Right Wide Defender     n= 326  top='Right Back' (75%)
+
+── Style clustering (GMM) ──────────────────────────────────
+  Chosen K = 7  |  BIC = 18491.2
+  Players with secondary style (>=20%): 386
+  BIC sweep:
+    k=4  BIC=21313.7  AIC=19068.6  OK
+    k=5  BIC=21034.7  AIC=18226.8  OK
+    k=6  BIC=21034.8  AIC=17664.1  OK
+    k=7  BIC=18491.2  AIC=14557.7  OK <-- chosen
+    k=8  BIC=18819.5  AIC=14323.1  OK
+    k=9  BIC=19169.2  AIC=14110.0  OK
+    k=10  BIC=19550.2  AIC=13928.2  OK
+
+  Style cluster breakdown:
+    Defensive Mid                  1,197  (33.4%)
+    Chance Creator                   687  (19.2%)
+    Clinical Finisher                507  (14.1%)
+    Carrier                          453  (12.6%)
+    All-Rounder                      368  (10.3%)
+    Pure Striker                     206  (5.7%)
+    Deep Playmaker                   168  (4.7%)
+
+  Posterior confidence (outfield):
+    Mean max-posterior      : 0.942
+    Median max-posterior    : 0.996
+    Frac confident (>=0.80) : 0.885
+    Mean entropy            : 0.150 nats  (max=1.946)
+
+── Final archetype distribution (top 20) ────────────────────
+  Clinical Finisher · Advanced Midfielder              318
+  Defensive Mid · Defensive Midfielder                 312
+  Goalkeeper                                           268
+  Chance Creator · Advanced Midfielder                 202
+  Defensive Mid · Left Wide Defender                   193
+  Defensive Mid · Right Center Back                    191
+  Defensive Mid · Right Wide Defender                  188
+  Defensive Mid · Left Center Back                     164
+  Chance Creator · Right Attacker                      108
+  Chance Creator · Left Attacker                       106
+  Chance Creator · Defensive Midfielder                100
+  Carrier · Advanced Midfielder                         97
+  All-Rounder · Right Center Back                       96
+  Carrier · Defensive Midfielder                        88
+  All-Rounder · Defensive Midfielder                    84
+  Carrier · Left Attacker                               83
+  Pure Striker · Advanced Midfielder                    76
+  All-Rounder · Left Center Back                        74
+  Carrier · Right Attacker                              61
+  Clinical Finisher · Left Attacker                     54

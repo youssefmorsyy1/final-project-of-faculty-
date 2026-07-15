@@ -1,0 +1,174 @@
+{
+  "dropped_features": [
+    {
+      "dropped": "days_since_last_injury",
+      "kept": "days_since_last_injury_capped",
+      "rho": 0.9762
+    },
+    {
+      "dropped": "minutes_last_30_days",
+      "kept": "matches_last_30_days",
+      "rho": 0.975
+    },
+    {
+      "dropped": "minutes_last_14_days",
+      "kept": "matches_last_14_days",
+      "rho": 0.9506
+    },
+    {
+      "dropped": "minutes_last_7_days",
+      "kept": "matches_last_7_days",
+      "rho": 0.9228
+    }
+  ],
+  "kept_features": [
+    "minutes_played",
+    "matches_last_30_days",
+    "age_at_match",
+    "sub_minute_flag",
+    "xg",
+    "xa",
+    "pressures",
+    "tackles",
+    "carry_distance",
+    "interceptions",
+    "clearances",
+    "matches_last_7_days",
+    "matches_last_14_days",
+    "consecutive_matches_played",
+    "days_rest_before_match",
+    "days_since_last_injury_capped"
+  ],
+  "imbalance_ablation": {
+    "raw": {
+      "roc_auc_mean": 0.7111194765931712,
+      "roc_auc_std": 0.015893594176958483,
+      "pr_auc_mean": 0.23224188745613433,
+      "pr_auc_std": 0.006963463112329669
+    },
+    "class_weight": {
+      "roc_auc_mean": 0.7113948312442295,
+      "roc_auc_std": 0.01854735618465586,
+      "pr_auc_mean": 0.22953435424356256,
+      "pr_auc_std": 0.009714600998714183
+    },
+    "smote": {
+      "roc_auc_mean": 0.6942760343765944,
+      "roc_auc_std": 0.016395912195421608,
+      "pr_auc_mean": 0.1857643809263942,
+      "pr_auc_std": 0.008048516781178839
+    }
+  },
+  "best_imbalance_strategy": "raw",
+  "model_comparison": [
+    {
+      "model": "LogisticRegression",
+      "roc_auc_mean": 0.5847020923175238,
+      "roc_auc_std": 0.001456975292282415,
+      "pr_auc_mean": 0.15739846557895254,
+      "pr_auc_std": 0.004037517889225107
+    },
+    {
+      "model": "RandomForest",
+      "roc_auc_mean": 0.677447273219845,
+      "roc_auc_std": 0.013429630811210099,
+      "pr_auc_mean": 0.18941198125804495,
+      "pr_auc_std": 0.008258773686616342
+    },
+    {
+      "model": "ExtraTrees",
+      "roc_auc_mean": 0.6818616010189661,
+      "roc_auc_std": 0.014725268123590473,
+      "pr_auc_mean": 0.19512856722436958,
+      "pr_auc_std": 0.009913657506758367
+    },
+    {
+      "model": "GradientBoosting",
+      "roc_auc_mean": 0.7001003682449125,
+      "roc_auc_std": 0.013920228659219484,
+      "pr_auc_mean": 0.21270221909320147,
+      "pr_auc_std": 0.007111880101569965
+    },
+    {
+      "model": "HistGradientBoosting",
+      "roc_auc_mean": 0.7013620460070795,
+      "roc_auc_std": 0.017226973424592888,
+      "pr_auc_mean": 0.21695772810300387,
+      "pr_auc_std": 0.011710599262275277
+    },
+    {
+      "model": "XGB",
+      "roc_auc_mean": 0.6806474469061814,
+      "roc_auc_std": 0.010124082886685211,
+      "pr_auc_mean": 0.20041935977758052,
+      "pr_auc_std": 0.007374781837117341
+    }
+  ],
+  "best_model": {
+    "model": "HistGradientBoosting",
+    "pr_auc_cv": 0.2185,
+    "params": {
+      "l2_regularization": 0.7004349545230062,
+      "learning_rate": 0.14695524321624376,
+      "max_iter": 222,
+      "max_leaf_nodes": 12,
+      "min_samples_leaf": 32
+    },
+    "holdout_2022_roc_auc": 0.6618236237306254,
+    "holdout_2022_pr_auc": 0.13645400477691633,
+    "loso": [
+      {
+        "season": "2015/2016",
+        "n_test": 50503,
+        "n_pos": 5500,
+        "roc_auc": 0.6501558805170564,
+        "pr_auc": 0.18383122752606262
+      },
+      {
+        "season": "2018",
+        "n_test": 1787,
+        "n_pos": 114,
+        "roc_auc": 0.6599133817808118,
+        "pr_auc": 0.12577753636733033
+      },
+      {
+        "season": "2020",
+        "n_test": 1572,
+        "n_pos": 115,
+        "roc_auc": 0.5945749156993226,
+        "pr_auc": 0.12937109129967064
+      },
+      {
+        "season": "2022",
+        "n_test": 1996,
+        "n_pos": 125,
+        "roc_auc": 0.6618236237306254,
+        "pr_auc": 0.13645400477691633
+      },
+      {
+        "season": "2024",
+        "n_test": 1592,
+        "n_pos": 0,
+        "skipped": true
+      }
+    ],
+    "permutation_importance": {
+      "minutes_played": 0.0156,
+      "clearances": 0.0129,
+      "days_since_last_injury_capped": 0.0117,
+      "age_at_match": 0.0113,
+      "interceptions": 0.0083,
+      "consecutive_matches_played": 0.0077,
+      "tackles": 0.0077,
+      "days_rest_before_match": 0.0059,
+      "matches_last_30_days": 0.0042,
+      "pressures": 0.0021,
+      "carry_distance": 0.0014,
+      "xg": 0.0013,
+      "xa": 0.0009,
+      "matches_last_14_days": 0.0008,
+      "matches_last_7_days": 0.0002,
+      "sub_minute_flag": 0.0001
+    }
+  }
+}

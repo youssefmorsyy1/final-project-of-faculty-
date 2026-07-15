@@ -1,0 +1,35 @@
+# Database
+psycopg2-binary>=2.9
+
+# Data
+pandas>=2.0
+numpy>=1.26
+pyarrow>=14.0        # required by pandas .to_parquet() / read_parquet()
+
+# ML
+scikit-learn>=1.4
+xgboost>=2.0
+imbalanced-learn>=0.12
+joblib>=1.3
+
+# Visualisation (model figures + EDA notebook)
+matplotlib>=3.8
+seaborn>=0.13         # EDA notebook heatmaps/distributions
+
+# EDA notebook execution + figure extraction (analysis/eda.ipynb)
+nbconvert>=7.0
+ipykernel>=6.0
+
+# Graph (Model 2)
+networkx>=3.2
+
+# API server
+fastapi>=0.111
+uvicorn[standard]>=0.29
+
+# Weather ingestion (Open-Meteo fetch + stadium geocoding)
+requests>=2.31
+geopy>=2.4
+
+# Configuration — reads .env files
+python-dotenv>=1.0
